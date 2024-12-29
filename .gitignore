@@ -1,0 +1,14 @@
+/node_modules
+
+# lock files
+/package-lock.json
+
+# nx cache
+.nx
+.env
+# DS store
+.DS_Store
+*/assets/.gitkeep
+cover.png
+**/*.gitkeep
+**/*.env.local
