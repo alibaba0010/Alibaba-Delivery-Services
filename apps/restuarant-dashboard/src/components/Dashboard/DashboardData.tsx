@@ -1,5 +1,5 @@
 import React from "react";
-import OrdersData from "../orders/OrdersData";
+import OrdersData from "../Orders/Orders";
 import InvoiceCharts from "../charts/InvoiceCharts";
 
 const DashboardData = () => {

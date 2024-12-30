@@ -12,7 +12,7 @@ interface OrdersDataType {
   created_at: string;
 }
 
-const OrdersData = ({ isDashboard }: { isDashboard?: boolean }) => {
+const Orders = ({ isDashboard }: { isDashboard?: boolean }) => {
   const columns: GridColDef[] = [
     {
       field: "id",
@@ -96,4 +96,4 @@ const OrdersData = ({ isDashboard }: { isDashboard?: boolean }) => {
   );
 };
 
-export default OrdersData;
+export default Orders;
