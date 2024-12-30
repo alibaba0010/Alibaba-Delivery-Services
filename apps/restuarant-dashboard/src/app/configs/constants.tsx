@@ -15,13 +15,13 @@ export const sideBarItems: SideBarItemsTypes[] = [
     icon: Icons.invoice,
   },
   {
-    title: "Create Food",
-    url: "/create-food",
+    title: "Add Food",
+    url: "/add-food",
     icon: Icons.create,
   },
   {
-    title: "Foods",
-    url: "/foods",
+    title: "Meals",
+    url: "/meals",
     icon: Icons.food,
   },
   {

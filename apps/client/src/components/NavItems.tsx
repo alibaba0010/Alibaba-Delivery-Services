@@ -15,7 +15,7 @@ const navItems = [
     url: "/restaurants",
   },
   {
-    title: "Popular Foods",
+    title: "Popular Meals",
     url: "/foods",
   },
   {
