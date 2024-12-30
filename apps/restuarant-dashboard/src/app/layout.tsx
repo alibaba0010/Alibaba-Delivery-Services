@@ -1,10 +1,11 @@
+import React from "react";
 import type { Metadata } from "next";
 import { Inter, Poppins } from "next/font/google";
 import "./global.css";
 import { Providers } from "./(providers)/providers";
 import { Toaster } from "react-hot-toast";
 import { headers } from "next/headers";
-import Sidebar from "../shared/components/layout/Sidebar";
+import SideBar from "../components/layout/SideBar";
 
 const poppins = Poppins({
   subsets: ["latin"],
@@ -34,7 +35,7 @@ export default function RootLayout({
               pathName !== "/register" &&
               pathName !== "/activate-account/[key]" && (
                 <div className="w-[350px] h-screen sticky top-0 left-0 z-50">
-                  <Sidebar />
+                  <SideBar />
                 </div>
               )}
             {children}

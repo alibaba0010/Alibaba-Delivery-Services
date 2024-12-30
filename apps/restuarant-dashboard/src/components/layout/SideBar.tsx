@@ -1,9 +1,9 @@
 import React from "react";
-import { Icons } from "../../../utils/Icon";
 import Image from "next/image";
-import SideNav from "./Sidenav";
+import SideNav from "./SideNav";
+import { Icons } from "../../utils/Icon";
 
-const Sidebar = () => {
+const SideBar = () => {
   return (
     <div className="bg-[#111C43] h-screen">
       <div className="p-3 flex flex-col justify-around h-screen">
@@ -27,4 +27,4 @@ const Sidebar = () => {
   );
 };
 
-export default Sidebar;
+export default SideBar;

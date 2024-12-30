@@ -19,7 +19,7 @@ type DashboardCardType = {
   icon: any;
   title: string;
   percentenge: string;
-  color: MUICircularColorType.color;
+  color: MUICircularColorType["color"];
   amount: string;
 };
 

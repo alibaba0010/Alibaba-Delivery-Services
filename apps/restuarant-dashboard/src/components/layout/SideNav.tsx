@@ -1,7 +1,8 @@
 "use client";
-import { activeItem, sideBarItems } from "../../../app/configs/constants";
+import React from "react";
 import Link from "next/link";
-import useRouteChange from "../../../hooks/useRouteChange";
+import { sideBarItems } from "../../app/configs/constants";
+import useRouteChange from "../../hooks/useRouteChange";
 
 const Sidenav = () => {
   const { activeRoute, setActiveRoute } = useRouteChange();
