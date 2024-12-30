@@ -1,7 +1,8 @@
-'use client';
-import { useMutation } from '@apollo/client';
-import { useEffect, useState } from 'react';
-import { ACTIVATION_RESTAURANT } from '../../../../graphql/actions/activation.restaurant';
+"use client";
+import React from "react";
+import { useMutation } from "@apollo/client";
+import { useEffect, useState } from "react";
+import { ACTIVATION_RESTAURANT } from "../../../../graphql/actions/activation.restaurant";
 
 const Page = ({ params }: { params: any }) => {
   const activationToken = params?.key;

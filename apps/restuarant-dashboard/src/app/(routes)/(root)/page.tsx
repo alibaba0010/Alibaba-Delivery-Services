@@ -5,8 +5,8 @@ import DashboardOverview from "../../../components/Dashboard/DashboardOverview";
 const Page = () => {
   return (
     <div className="w-full h-screen flex flex-col justify-center">
-      <DashboardData />
       <DashboardOverview />
+      <DashboardData />
     </div>
   );
 };

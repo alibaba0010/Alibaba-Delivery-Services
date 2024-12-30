@@ -14,7 +14,6 @@ type MUICircularColorType = {
     | "warning"
     | "inherit";
 };
-
 type DashboardCardType = {
   icon: any;
   title: string;

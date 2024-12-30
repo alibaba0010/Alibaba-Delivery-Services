@@ -1,14 +1,15 @@
-'use client';
-import { z } from 'zod';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai';
-import { useState } from 'react';
-import Link from 'next/link';
-import { Country, State } from 'country-state-city';
-import { useMutation } from '@apollo/client';
-import { REGISTER_RESTAURANT } from '../../../graphql/actions/register.restaurant';
-import toast from 'react-hot-toast';
+"use client";
+import React from "react";
+import { z } from "zod";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
+import { useState } from "react";
+import Link from "next/link";
+import { Country, State } from "country-state-city";
+import { useMutation } from "@apollo/client";
+import toast from "react-hot-toast";
+import { REGISTER_RESTAURANT } from "../../graphql/actions/register.restaurant";
 
 const formSchema = z.object({
   name: z.string(),
@@ -17,9 +18,9 @@ const formSchema = z.object({
   address: z.string(),
   phone_number: z
     .number()
-    .min(9, 'Phone number must need to be at least 9characters long!'),
+    .min(9, "Phone number must need to be at least 9characters long!"),
   email: z.string().email(),
-  password: z.string().min(8, 'Password must be at least 8characters long!'),
+  password: z.string().min(8, "Password must be at least 8characters long!"),
 });
 
 type RegisterSchema = z.infer<typeof formSchema>;
@@ -63,7 +64,7 @@ const Register = () => {
         <form onSubmit={handleSubmit(onSubmit)} className="!font-Poppins">
           <label className="label block">Enter Restaurant name</label>
           <input
-            {...register('name')}
+            {...register("name")}
             type="text"
             placeholder="Foodpanda"
             className="input"
@@ -79,9 +80,9 @@ const Register = () => {
             </label>
             <select
               className="w-[95%] border input h-[40px] rounded-[5px]"
-              {...register('country')}
+              {...register("country")}
               onChange={(e) => {
-                setValue('country', e.target.value);
+                setValue("country", e.target.value);
               }}
             >
               <option className="block pb-2" value="">
@@ -104,16 +105,16 @@ const Register = () => {
             </label>
             <select
               className="w-[95%] border input h-[40px] rounded-[5px]"
-              {...register('city')}
+              {...register("city")}
               onChange={(e) => {
-                setValue('city', e.target.value);
+                setValue("city", e.target.value);
               }}
             >
               <option className="block pb-2" value="">
                 Choose your city
               </option>
               {State &&
-                State.getStatesOfCountry(watch('country')).map((item) => (
+                State.getStatesOfCountry(watch("country")).map((item) => (
                   <option key={item.isoCode} value={item.isoCode}>
                     {item.name}
                   </option>
@@ -128,8 +129,8 @@ const Register = () => {
               Enter your address
             </label>
             <input
-              {...register('address')}
-              type={'text'}
+              {...register("address")}
+              type={"text"}
               placeholder="600 Amphitheatre Parkway, United States."
               className="input"
             />
@@ -142,8 +143,8 @@ const Register = () => {
               Enter your phone number
             </label>
             <input
-              {...register('phone_number', { valueAsNumber: true })}
-              type={'number'}
+              {...register("phone_number", { valueAsNumber: true })}
+              type={"number"}
               placeholder="9544533345"
               className="input"
             />
@@ -156,8 +157,8 @@ const Register = () => {
               Enter your restaurant email
             </label>
             <input
-              {...register('email')}
-              type={'text'}
+              {...register("email")}
+              type={"text"}
               placeholder="restaurant@becodemy.com"
               className="input"
             />
@@ -170,8 +171,8 @@ const Register = () => {
               Enter your password
             </label>
             <input
-              {...register('password')}
-              type={!show ? 'password' : 'text'}
+              {...register("password")}
+              type={!show ? "password" : "text"}
               placeholder="password!@%"
               className="input"
             />
@@ -203,7 +204,7 @@ const Register = () => {
           <h5 className="text-center pt-4 font-Poppins text-[16px]">
             Already have an account?
             <Link
-              href={'/login'}
+              href={"/login"}
               className="text-[#2190ff] pl-1 cursor-pointer font-Poppins"
             >
               Sign in
