@@ -10,7 +10,7 @@ const Meals = () => {
     { field: "name", headerName: "Name", flex: 1 },
     { field: "price", headerName: "Price", flex: 0.5 },
     { field: "totalOrders", headerName: "Total Orders", flex: 0.5 },
-    { field: "createdAt", headerName: "Created At", flex: 0.5 },
+    { field: "created_at", headerName: "Created At", flex: 0.5 },
     {
       field: " ",
       headerName: "Actions",
@@ -30,7 +30,7 @@ const Meals = () => {
     },
   ];
   const rows: MealsDataType[] = Array.from({ length: 10 }, (_, index) => ({
-    id: `order-${index + 1}`,
+    id: `meal-${index + 1}`,
     name: "shahriar sajeeb",
     price: "12$",
     totalOrders: 10,
