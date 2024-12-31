@@ -7,7 +7,6 @@ import { usePathname } from "next/navigation";
 const Sidenav = () => {
   const { activeRoute, setActiveRoute } = useRouteChange();
   const pathName = usePathname();
-  console.log("Pathname: " + pathName);
   useEffect(() => {
     setActiveRoute(pathName);
   }, [pathName]);

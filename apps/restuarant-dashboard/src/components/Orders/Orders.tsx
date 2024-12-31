@@ -3,15 +3,6 @@ import React from "react";
 import { Box } from "@mui/material";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
 
-interface OrdersDataType {
-  id: string;
-  name: string;
-  email: string;
-  title: string;
-  price: string;
-  created_at: string;
-}
-
 const Orders = ({ isDashboard }: { isDashboard?: boolean }) => {
   const columns: GridColDef[] = [
     {
