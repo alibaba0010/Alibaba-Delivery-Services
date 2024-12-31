@@ -43,11 +43,11 @@ model Reviews {
   rating Float
   userId String @db.ObjectId
   user   User   @relation(fields: [userId], references: [id])
-  food   Foods  @relation(fields: [foodId], references: [id])
-  foodId String @db.ObjectId
+  meal   Meals  @relation(fields: [mealId], references: [id])
+  mealId String @db.ObjectId
 }
 
-model Foods {
+model Meals {
   id             String     @id @default(auto()) @map("_id") @db.ObjectId
   name           String
   description    String
@@ -71,7 +71,7 @@ model Restaurant {
   email        String   @unique
   phone_number Float    @unique
   password     String
-  Foods        Foods[]
+  Meals        Meals[]
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
 }
