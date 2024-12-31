@@ -1,11 +1,17 @@
 "use client";
-import React from "react";
+import React, { useEffect } from "react";
 import Link from "next/link";
 import { sideBarItems } from "../../app/configs/constants";
 import useRouteChange from "../../hooks/useRouteChange";
-
+import { usePathname } from "next/navigation";
 const Sidenav = () => {
   const { activeRoute, setActiveRoute } = useRouteChange();
+  const pathName = usePathname();
+  console.log("Pathname: " + pathName);
+  useEffect(() => {
+    setActiveRoute(pathName);
+  }, [pathName]);
+
   return (
     <>
       {sideBarItems.map((i: SideBarItemsTypes, index: number) => (

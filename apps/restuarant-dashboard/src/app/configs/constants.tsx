@@ -15,8 +15,8 @@ export const sideBarItems: SideBarItemsTypes[] = [
     icon: Icons.invoice,
   },
   {
-    title: "Add Food",
-    url: "/add-food",
+    title: "Add Meal",
+    url: "/add-meal",
     icon: Icons.create,
   },
   {
