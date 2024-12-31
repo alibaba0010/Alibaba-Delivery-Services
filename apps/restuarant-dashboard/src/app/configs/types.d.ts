@@ -38,7 +38,6 @@ type FoodCategoryType = {
 type MealsDataType = {
   id: string;
   name: string;
-  email: string;
   price: number | string;
   totalOrders: number;
   created_at: Date | string;
