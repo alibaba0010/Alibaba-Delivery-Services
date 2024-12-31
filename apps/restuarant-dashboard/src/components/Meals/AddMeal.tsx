@@ -3,7 +3,7 @@ import { z } from "zod";
 import { useForm } from "react-hook-form";
 import Image from "next/image";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { foodCategoryItems } from "../../app/configs/constants";
+import { mealCategoryItems } from "../../app/configs/constants";
 const formSchema = z.object({
   name: z.string().min(3).max(50),
   description: z.string().min(10).max(200),
@@ -145,7 +145,7 @@ const AddMeal = () => {
               <option value="" disabled className="bg-black text-xl">
                 Select a category
               </option>
-              {foodCategoryItems.map((i: FoodCategoryType) => (
+              {mealCategoryItems.map((i: MealCategoryType) => (
                 <option value={i.title} key={i.title} className="bg-black">
                   {i.title}
                 </option>

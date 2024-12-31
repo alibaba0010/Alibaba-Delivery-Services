@@ -15,8 +15,8 @@ const poppins = Poppins({
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 
 export const metadata: Metadata = {
-  title: "Alibaba Food Delivery",
-  description: "Alibaba Food Delivery website",
+  title: "Alibaba Delivery",
+  description: "Alibaba Delivery services",
 };
 const header = headers();
 const pathName = header.get("next-url");

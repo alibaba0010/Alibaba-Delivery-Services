@@ -12,7 +12,7 @@ import { MdOutlineReviews } from "react-icons/md";
 export const Icons: any = {
   home: <FiHome />,
   invoice: <LiaFileInvoiceDollarSolid />,
-  food: <IoFastFoodSharp />,
+  meal: <IoFastFoodSharp />,
   create: <FiUploadCloud />,
   analytics: <TbFileAnalytics />,
   logOut: <IoLogOutOutline />,

@@ -66,7 +66,7 @@ const Register = () => {
           <input
             {...register("name")}
             type="text"
-            placeholder="Foodpanda"
+            placeholder="John Jane"
             className="input"
           />
           {errors.name && (

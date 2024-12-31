@@ -31,7 +31,7 @@ type OrdersDataType = {
   created_at: Date | string;
 };
 
-type FoodCategoryType = {
+type MealCategoryType = {
   title: string;
 };
 

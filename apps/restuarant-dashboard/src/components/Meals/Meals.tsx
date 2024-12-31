@@ -20,7 +20,7 @@ const Meals = () => {
           <div className="md:w-[50%] flex justify-center">
             <span
               className="text-3xl cursor-pointer"
-              // onClick={() => handleDeleteFood(params.row.id)}
+              // onClick={() => handleDeleteMeal(params.row.id)}
             >
               {Icons.delete}
             </span>

@@ -22,7 +22,7 @@ export const sideBarItems: SideBarItemsTypes[] = [
   {
     title: "Meals",
     url: "/meals",
-    icon: Icons.food,
+    icon: Icons.meal,
   },
   {
     title: "Analytics",
@@ -31,7 +31,7 @@ export const sideBarItems: SideBarItemsTypes[] = [
   },
 ];
 
-export const foodCategoryItems: FoodCategoryType[] = [
+export const mealCategoryItems: MealCategoryType[] = [
   {
     title: "Pizza",
   },

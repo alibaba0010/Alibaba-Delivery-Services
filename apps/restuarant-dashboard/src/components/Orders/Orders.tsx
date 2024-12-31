@@ -12,7 +12,7 @@ const Orders = ({ isDashboard }: { isDashboard?: boolean }) => {
     },
     { field: "name", headerName: "Name", flex: isDashboard ? 0.8 : 0.5 },
     ...(isDashboard ? [] : [{ field: "email", headerName: "Email", flex: 1 }]),
-    { field: "title", headerName: "Food", flex: 0.8 },
+    { field: "title", headerName: "Meal", flex: 0.8 },
     { field: "price", headerName: "Price", flex: 0.5 },
     { field: "created_at", headerName: "Created At", flex: 0.5 },
   ];

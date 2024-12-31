@@ -11,7 +11,7 @@ const Hero = () => {
           Delivered straight to your door!
         </h1>
         <p className={`${styles.label} !text-[18px]`}>
-          Healthy food, drinks and groceries available for delivery or pickup.
+          Healthy meals, drinks and groceries available for delivery or pickup.
           Great <br /> discounts for first delivery.
         </p>
         <br />
