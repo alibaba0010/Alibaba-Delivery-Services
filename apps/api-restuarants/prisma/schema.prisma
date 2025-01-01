@@ -52,7 +52,7 @@ model Meals {
   name           String
   description    String
   price          Int
-  estimatedPrice Int
+  estimatedPrice Int?
   category       String
   images         String[]
   restaurantId   String     @db.ObjectId

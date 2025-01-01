@@ -44,11 +44,9 @@ const AddMeal = () => {
     // setValue("images", Array.from(e.target.files), { shouldValidate: true });
     if (e.target.files) {
       const files = Array.from(e.target.files);
-      console.log("files: " + files);
 
       const imageArray = files.map((file) => {
         const reader = new FileReader();
-
         return new Promise<string>((resolve) => {
           reader.onload = () => {
             if (reader.readyState === 2) {
@@ -59,7 +57,6 @@ const AddMeal = () => {
         });
       });
       Promise.all(imageArray).then((imageUrls) => {
-        console.log("Image url: " + imageUrls);
         setValue("images", imageUrls);
       });
     }
@@ -202,7 +199,7 @@ const AddMeal = () => {
           </div>
           <input
             type="submit"
-            value={"Create"}
+            value={"create"}
             disabled={isSubmitting}
             className="button !w-[200px] mt-5 !p-0 !text-2xl justify-self-center"
           />
@@ -246,3 +243,13 @@ export default AddMeal;
 //     await handleFiles();
 //   }
 // };
+// const extractFileName = (fullFileName) => {
+//   const match = fullFileName.match(
+//     /(\d{4}-\d{2}-\d{2} \d{2}-\d{2}-\d{2}\.png)$/
+//   );
+//   return match ? match[0] : fullFileName; // Return the match or the original name if no match
+// };
+
+// const fileName = e.target.files[0].name;
+// const extractedName = extractFileName(fileName);
+// console.log("Extracted file name:", extractedName);
