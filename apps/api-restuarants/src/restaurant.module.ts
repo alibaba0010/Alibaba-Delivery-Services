@@ -1,15 +1,17 @@
-import { Module } from '@nestjs/common';
-import { ConfigModule, ConfigService } from '@nestjs/config';
-import { GraphQLModule } from '@nestjs/graphql';
+import { Module } from "@nestjs/common";
+import { ConfigModule, ConfigService } from "@nestjs/config";
+import { GraphQLModule } from "@nestjs/graphql";
 import {
   ApolloFederationDriver,
   ApolloFederationDriverConfig,
-} from '@nestjs/apollo';
-import { JwtService } from '@nestjs/jwt';
-import { PrismaService } from '../prisma/prisma.service';
-import { EmailModule } from './email/email.module';
-import { RestaurantService } from './restaurant.service';
-import { RestaurantResolver } from './restaurant.resolver';
+} from "@nestjs/apollo";
+import { JwtService } from "@nestjs/jwt";
+import { PrismaService } from "../prisma/prisma.service";
+import { EmailModule } from "./email/email.module";
+import { RestaurantService } from "./restaurant.service";
+import { RestaurantResolver } from "./restaurant.resolver";
+import { MealsResolver } from "./resolvers/meals.resolver";
+import { MealsService } from "./services/meals.service";
 
 @Module({
   imports: [
@@ -31,6 +33,8 @@ import { RestaurantResolver } from './restaurant.resolver';
     JwtService,
     PrismaService,
     RestaurantResolver,
+    MealsResolver,
+    MealsService,
   ],
 })
 export class restaurantModule {}
