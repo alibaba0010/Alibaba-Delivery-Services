@@ -12,6 +12,7 @@ import { RestaurantService } from "./restaurant.service";
 import { RestaurantResolver } from "./restaurant.resolver";
 import { MealsResolver } from "./resolvers/meals.resolver";
 import { MealsService } from "./services/meals.service";
+import { EmailService } from "./email/email.service";
 
 @Module({
   imports: [
@@ -35,6 +36,7 @@ import { MealsService } from "./services/meals.service";
     RestaurantResolver,
     MealsResolver,
     MealsService,
+    EmailService,
   ],
 })
 export class restaurantModule {}

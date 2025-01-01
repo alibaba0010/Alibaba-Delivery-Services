@@ -32,6 +32,7 @@ const restaurant_service_1 = __webpack_require__(16);
 const restaurant_resolver_1 = __webpack_require__(19);
 const meals_resolver_1 = __webpack_require__(25);
 const meals_service_1 = __webpack_require__(26);
+const email_service_1 = __webpack_require__(13);
 let restaurantModule = class restaurantModule {
 };
 exports.restaurantModule = restaurantModule;
@@ -58,6 +59,7 @@ exports.restaurantModule = restaurantModule = tslib_1.__decorate([
             restaurant_resolver_1.RestaurantResolver,
             meals_resolver_1.MealsResolver,
             meals_service_1.MealsService,
+            email_service_1.EmailService,
         ],
     })
 ], restaurantModule);
@@ -151,6 +153,7 @@ exports.EmailModule = EmailModule = tslib_1.__decorate([
                 useFactory: async (config) => ({
                     transport: {
                         host: config.get("SMTP_HOST"),
+                        port: config.get("SMTP_PORT"),
                         secure: true,
                         auth: {
                             user: config.get("EMAIL_USER"),
@@ -158,7 +161,7 @@ exports.EmailModule = EmailModule = tslib_1.__decorate([
                         },
                     },
                     defaults: {
-                        from: "Becodemy",
+                        from: "Alibaba Delivery Services",
                     },
                     template: {
                         dir: (0, path_1.join)(__dirname, "../../../apps/api-restuarants/email-templates"),

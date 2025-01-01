@@ -12,6 +12,7 @@ import { EjsAdapter } from "@nestjs-modules/mailer/dist/adapters/ejs.adapter";
       useFactory: async (config: ConfigService) => ({
         transport: {
           host: config.get("SMTP_HOST"),
+          port: config.get("SMTP_PORT"),
           secure: true,
           auth: {
             user: config.get("EMAIL_USER"),
@@ -19,7 +20,7 @@ import { EjsAdapter } from "@nestjs-modules/mailer/dist/adapters/ejs.adapter";
           },
         },
         defaults: {
-          from: "Becodemy",
+          from: "Alibaba Delivery Services",
         },
         template: {
           dir: join(__dirname, "../../../apps/api-restuarants/email-templates"),
