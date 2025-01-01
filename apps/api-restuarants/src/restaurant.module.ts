@@ -13,6 +13,7 @@ import { RestaurantResolver } from "./restaurant.resolver";
 import { MealsResolver } from "./resolvers/meals.resolver";
 import { MealsService } from "./services/meals.service";
 import { EmailService } from "./email/email.service";
+import { CloudinaryModule } from './cloudinary/cloudinary.module';
 
 @Module({
   imports: [
@@ -26,6 +27,7 @@ import { EmailService } from "./email/email.service";
       },
     }),
     EmailModule,
+    CloudinaryModule,
   ],
   controllers: [],
   providers: [
