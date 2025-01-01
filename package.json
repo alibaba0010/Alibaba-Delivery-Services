@@ -27,6 +27,7 @@
     "axios": "^1.0.0",
     "bcrypt": "^5.1.1",
     "class-validator": "^0.14.0",
+    "cloudinary": "^2.5.1",
     "country-state-city": "^3.2.1",
     "ejs": "^3.1.9",
     "eslint-plugin-prettier": "^5.1.2",

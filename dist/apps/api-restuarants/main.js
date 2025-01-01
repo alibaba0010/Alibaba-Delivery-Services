@@ -30,6 +30,8 @@ const prisma_service_1 = __webpack_require__(10);
 const email_module_1 = __webpack_require__(12);
 const restaurant_service_1 = __webpack_require__(16);
 const restaurant_resolver_1 = __webpack_require__(19);
+const meals_resolver_1 = __webpack_require__(25);
+const meals_service_1 = __webpack_require__(26);
 let restaurantModule = class restaurantModule {
 };
 exports.restaurantModule = restaurantModule;
@@ -54,6 +56,8 @@ exports.restaurantModule = restaurantModule = tslib_1.__decorate([
             jwt_1.JwtService,
             prisma_service_1.PrismaService,
             restaurant_resolver_1.RestaurantResolver,
+            meals_resolver_1.MealsResolver,
+            meals_service_1.MealsService,
         ],
     })
 ], restaurantModule);
@@ -146,18 +150,18 @@ exports.EmailModule = EmailModule = tslib_1.__decorate([
             mailer_1.MailerModule.forRootAsync({
                 useFactory: async (config) => ({
                     transport: {
-                        host: config.get('SMTP_HOST'),
+                        host: config.get("SMTP_HOST"),
                         secure: true,
                         auth: {
-                            user: config.get('SMTP_MAIL'),
-                            pass: config.get('SMTP_PASSWORD'),
+                            user: config.get("EMAIL_USER"),
+                            pass: config.get("EMAIL_PASS"),
                         },
                     },
                     defaults: {
-                        from: 'Becodemy',
+                        from: "Becodemy",
                     },
                     template: {
-                        dir: (0, path_1.join)(__dirname, '../../../apps/api-restuarants/email-templates'),
+                        dir: (0, path_1.join)(__dirname, "../../../apps/api-restuarants/email-templates"),
                         adapter: new ejs_adapter_1.EjsAdapter(),
                         options: {
                             strict: false,
@@ -843,6 +847,171 @@ exports.AuthGuard = AuthGuard = tslib_1.__decorate([
 ], AuthGuard);
 
 
+/***/ }),
+/* 25 */
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+
+var _a, _b, _c;
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.MealsResolver = void 0;
+const tslib_1 = __webpack_require__(4);
+const graphql_1 = __webpack_require__(7);
+const meals_service_1 = __webpack_require__(26);
+const meals_types_1 = __webpack_require__(27);
+const common_1 = __webpack_require__(5);
+const auth_guard_1 = __webpack_require__(24);
+const meals_dto_1 = __webpack_require__(28);
+let MealsResolver = class MealsResolver {
+    // resolvers here
+    constructor(mealsService) {
+        this.mealsService = mealsService;
+    }
+    async addMeal(addMealDto, context) {
+        return await this.mealsService.addMeal(addMealDto, context.req);
+    }
+};
+exports.MealsResolver = MealsResolver;
+tslib_1.__decorate([
+    (0, graphql_1.Mutation)(() => meals_types_1.AddMealResponse),
+    (0, common_1.UseGuards)(auth_guard_1.AuthGuard),
+    tslib_1.__param(0, (0, graphql_1.Args)("addMealDto")),
+    tslib_1.__param(1, (0, graphql_1.Context)()),
+    tslib_1.__metadata("design:type", Function),
+    tslib_1.__metadata("design:paramtypes", [typeof (_b = typeof meals_dto_1.AddMealDto !== "undefined" && meals_dto_1.AddMealDto) === "function" ? _b : Object, Object]),
+    tslib_1.__metadata("design:returntype", typeof (_c = typeof Promise !== "undefined" && Promise) === "function" ? _c : Object)
+], MealsResolver.prototype, "addMeal", null);
+exports.MealsResolver = MealsResolver = tslib_1.__decorate([
+    (0, graphql_1.Resolver)("Meals"),
+    tslib_1.__metadata("design:paramtypes", [typeof (_a = typeof meals_service_1.MealsService !== "undefined" && meals_service_1.MealsService) === "function" ? _a : Object])
+], MealsResolver);
+
+
+/***/ }),
+/* 26 */
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+
+var _a, _b, _c;
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.MealsService = void 0;
+const tslib_1 = __webpack_require__(4);
+const config_1 = __webpack_require__(6);
+const prisma_service_1 = __webpack_require__(10);
+const common_1 = __webpack_require__(5);
+const email_service_1 = __webpack_require__(13);
+let MealsService = class MealsService {
+    constructor(mprismService, configService, emailService) {
+        this.mprismService = mprismService;
+        this.configService = configService;
+        this.emailService = emailService;
+    }
+    // add(craete) a meal
+    async addMeal(addMealDto, req) {
+        const { name, description, price, estimatedPrice, category, images } = addMealDto;
+        const restaurantId = req.restaurant.id;
+        console.log("Resturant id : " + restaurantId);
+        return { message: "Meal Added Successfully" };
+    }
+};
+exports.MealsService = MealsService;
+exports.MealsService = MealsService = tslib_1.__decorate([
+    (0, common_1.Injectable)(),
+    tslib_1.__metadata("design:paramtypes", [typeof (_a = typeof prisma_service_1.PrismaService !== "undefined" && prisma_service_1.PrismaService) === "function" ? _a : Object, typeof (_b = typeof config_1.ConfigService !== "undefined" && config_1.ConfigService) === "function" ? _b : Object, typeof (_c = typeof email_service_1.EmailService !== "undefined" && email_service_1.EmailService) === "function" ? _c : Object])
+], MealsService);
+
+
+/***/ }),
+/* 27 */
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+
+var _a;
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.AddMealResponse = void 0;
+const tslib_1 = __webpack_require__(4);
+const graphql_1 = __webpack_require__(7);
+const user_type_1 = __webpack_require__(20);
+let AddMealResponse = class AddMealResponse {
+};
+exports.AddMealResponse = AddMealResponse;
+tslib_1.__decorate([
+    (0, graphql_1.Field)(),
+    tslib_1.__metadata("design:type", String)
+], AddMealResponse.prototype, "message", void 0);
+tslib_1.__decorate([
+    (0, graphql_1.Field)(() => user_type_1.ErrorType, { nullable: true }),
+    tslib_1.__metadata("design:type", typeof (_a = typeof user_type_1.ErrorType !== "undefined" && user_type_1.ErrorType) === "function" ? _a : Object)
+], AddMealResponse.prototype, "error", void 0);
+exports.AddMealResponse = AddMealResponse = tslib_1.__decorate([
+    (0, graphql_1.ObjectType)()
+], AddMealResponse);
+
+
+/***/ }),
+/* 28 */
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.DeleteMealDto = exports.AddMealDto = void 0;
+const tslib_1 = __webpack_require__(4);
+const graphql_1 = __webpack_require__(7);
+const class_validator_1 = __webpack_require__(23);
+let AddMealDto = class AddMealDto {
+};
+exports.AddMealDto = AddMealDto;
+tslib_1.__decorate([
+    (0, graphql_1.Field)(),
+    (0, class_validator_1.IsNotEmpty)({ message: "Meal Name is required." }),
+    (0, class_validator_1.IsString)({ message: "Meal Name must need to be one string." }),
+    tslib_1.__metadata("design:type", String)
+], AddMealDto.prototype, "name", void 0);
+tslib_1.__decorate([
+    (0, graphql_1.Field)(),
+    (0, class_validator_1.IsNotEmpty)({ message: "Meal description is required." }),
+    (0, class_validator_1.IsString)({ message: "Meal description must need to be one string." }),
+    tslib_1.__metadata("design:type", String)
+], AddMealDto.prototype, "description", void 0);
+tslib_1.__decorate([
+    (0, graphql_1.Field)(),
+    (0, class_validator_1.IsNotEmpty)({ message: "Meal price is required." }),
+    tslib_1.__metadata("design:type", Number)
+], AddMealDto.prototype, "price", void 0);
+tslib_1.__decorate([
+    (0, graphql_1.Field)(),
+    (0, class_validator_1.IsNotEmpty)({ message: "Meal estimated price is required." }),
+    tslib_1.__metadata("design:type", Number)
+], AddMealDto.prototype, "estimatedPrice", void 0);
+tslib_1.__decorate([
+    (0, graphql_1.Field)(),
+    (0, class_validator_1.IsNotEmpty)({ message: "Meal category is required." }),
+    (0, class_validator_1.IsString)({ message: "Meal category must need to be one string." }),
+    tslib_1.__metadata("design:type", String)
+], AddMealDto.prototype, "category", void 0);
+tslib_1.__decorate([
+    (0, graphql_1.Field)(() => [String]),
+    (0, class_validator_1.IsArray)({ message: "Meal images must be an array." }),
+    (0, class_validator_1.ArrayNotEmpty)({ message: "Meal images array must not be empty." }),
+    tslib_1.__metadata("design:type", Array)
+], AddMealDto.prototype, "images", void 0);
+exports.AddMealDto = AddMealDto = tslib_1.__decorate([
+    (0, graphql_1.InputType)()
+], AddMealDto);
+let DeleteMealDto = class DeleteMealDto {
+};
+exports.DeleteMealDto = DeleteMealDto;
+tslib_1.__decorate([
+    (0, graphql_1.Field)(),
+    (0, class_validator_1.IsNotEmpty)({ message: "Meal id is required." }),
+    (0, class_validator_1.IsString)({ message: "Meal id must need to be one string." }),
+    tslib_1.__metadata("design:type", String)
+], DeleteMealDto.prototype, "id", void 0);
+exports.DeleteMealDto = DeleteMealDto = tslib_1.__decorate([
+    (0, graphql_1.InputType)()
+], DeleteMealDto);
+
+
 /***/ })
 /******/ 	]);
 /************************************************************************/
@@ -882,13 +1051,13 @@ const path_1 = __webpack_require__(2);
 const restaurant_module_1 = __webpack_require__(3);
 async function bootstrap() {
     const app = await core_1.NestFactory.create(restaurant_module_1.restaurantModule);
-    app.useStaticAssets((0, path_1.join)(__dirname, '..', 'public'));
-    app.setBaseViewsDir((0, path_1.join)(__dirname, '..', 'apps/api-restuarants/email-templates'));
-    app.setViewEngine('ejs');
+    app.useStaticAssets((0, path_1.join)(__dirname, "..", "public"));
+    app.setBaseViewsDir((0, path_1.join)(__dirname, "..", "apps/api-restuarants/email-templates"));
+    app.setViewEngine("ejs");
     app.enableCors({
-        origin: '*',
+        origin: "*",
     });
-    await app.listen(4001);
+    await app.listen(3002);
 }
 bootstrap();
 

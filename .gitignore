@@ -12,3 +12,4 @@
 cover.png
 **/*.gitkeep
 **/*.env.local
+dist/**

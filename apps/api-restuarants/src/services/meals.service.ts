@@ -15,7 +15,7 @@ export class MealsService {
   async addMeal(addMealDto: AddMealDto, req: any) {
     const { name, description, price, estimatedPrice, category, images } =
       addMealDto;
-    const restaurantId = req.restaurants.id;
+    const restaurantId = req.restaurant.id;
     console.log("Resturant id : " + restaurantId);
     return { message: "Meal Added Successfully" };
   }
