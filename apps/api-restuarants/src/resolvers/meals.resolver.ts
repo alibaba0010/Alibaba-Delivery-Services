@@ -16,6 +16,10 @@ export class MealsResolver {
     @Args("addMealDto") addMealDto: AddMealDto,
     @Context() context: { req: Request; res: Response }
   ): Promise<AddMealResponse> {
-    return await this.mealsService.addMeal(addMealDto, context.req);
+    return await this.mealsService.addMeal(
+      addMealDto,
+      context.req,
+      context.res
+    );
   }
 }

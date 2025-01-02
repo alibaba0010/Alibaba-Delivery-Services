@@ -875,7 +875,7 @@ let MealsResolver = class MealsResolver {
         this.mealsService = mealsService;
     }
     async addMeal(addMealDto, context) {
-        return await this.mealsService.addMeal(addMealDto, context.req);
+        return await this.mealsService.addMeal(addMealDto, context.req, context.res);
     }
 };
 exports.MealsResolver = MealsResolver;
@@ -916,23 +916,30 @@ let MealsService = class MealsService {
         this.cloudinaryService = cloudinaryService;
     }
     // add(craete) a meal
-    async addMeal(addMealDto, req) {
+    async addMeal(addMealDto, req, response) {
         const { name, description, price, estimatedPrice, category, images } = addMealDto;
         const restaurantId = req.restaurant.id;
-        console.log("Resturant id : " + restaurantId);
         try {
             let mealImages = [];
             for (const image of images) {
-                console.log("Image : " + image);
                 if (typeof image === "string") {
                     const data = await this.cloudinaryService.uploadImage(image);
+                    console.log("Data : " + data);
                     mealImages.push({
                         public_id: data.public_id,
                         url: data.secure_url,
                     });
                 }
             }
-            console.log("Saved images");
+            const newImages = {
+                images: {
+                    create: mealImages.map((image) => ({
+                        public_id: image.public_id,
+                        url: image.url,
+                    })),
+                },
+            };
+            console.log("New images: ", newImages);
             await this.prismaService.meals.create({
                 data: {
                     name,
@@ -940,18 +947,16 @@ let MealsService = class MealsService {
                     price,
                     estimatedPrice,
                     category,
-                    restaurant: { connect: { id: restaurantId } },
-                    images: mealImages.map((image) => ({
-                        public_id: image.public_id,
-                        url: image.url,
-                    })),
+                    restaurantId,
+                    // restaurant: { connect: { id: restaurantId } },
+                    images: newImages.images,
                 },
             });
             return { message: "Meal Added Successfully" };
         }
         catch (error) {
             console.log(error);
-            return { message: error.message };
+            return { message: error };
         }
     }
 };
@@ -977,7 +982,7 @@ let CloudinaryService = class CloudinaryService {
     async uploadImage(image) {
         try {
             const result = await cloudinary_1.v2.uploader.upload(image, {
-                folder: "Mealsmod",
+                folder: "Meals",
                 resource_type: "image",
             });
             return result;

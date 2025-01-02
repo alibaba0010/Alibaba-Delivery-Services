@@ -47,6 +47,13 @@ model Reviews {
   mealId String @db.ObjectId
 }
 
+model Images {
+  id        String @id @default(auto()) @map("_id") @db.ObjectId
+  public_id String
+  url       String
+  mealId    String @db.ObjectId
+  meal      Meals  @relation(fields: [mealId], references: [id])
+}
 model Meals {
   id             String     @id @default(auto()) @map("_id") @db.ObjectId
   name           String
@@ -54,7 +61,7 @@ model Meals {
   price          Int
   estimatedPrice Int?
   category       String
-  images         String[]
+  images         Images[]
   restaurantId   String     @db.ObjectId
   restaurant     Restaurant @relation(fields: [restaurantId], references: [id])
   createdAt      DateTime   @default(now())

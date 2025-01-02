@@ -4,6 +4,7 @@ import { Injectable } from "@nestjs/common";
 import { EmailService } from "../email/email.service";
 import { AddMealDto } from "../dto/meals.dto";
 import { CloudinaryService } from "../cloudinary/cloudinary.service";
+import { Response } from "express";
 
 type Images = {
   public_id: string;
@@ -19,25 +20,35 @@ export class MealsService {
     private readonly cloudinaryService: CloudinaryService
   ) {}
   // add(craete) a meal
-  async addMeal(addMealDto: AddMealDto, req: any) {
+  async addMeal(addMealDto: AddMealDto, req: any, response: Response) {
     const { name, description, price, estimatedPrice, category, images } =
       addMealDto;
     const restaurantId = req.restaurant.id;
-    console.log("Resturant id : " + restaurantId);
     try {
       let mealImages: Images | any = [];
 
       for (const image of images) {
-        console.log("Image : " + image);
         if (typeof image === "string") {
           const data = await this.cloudinaryService.uploadImage(image);
+          console.log("Data : " + data);
           mealImages.push({
             public_id: data.public_id,
             url: data.secure_url,
           });
         }
       }
-      console.log("Saved images");
+      const newImages = {
+        images: {
+          create: mealImages.map(
+            (image: { public_id: string; url: string }) => ({
+              public_id: image.public_id,
+              url: image.url,
+            })
+          ),
+        },
+      };
+
+      console.log("New images: ", newImages);
       await this.prismaService.meals.create({
         data: {
           name,
@@ -45,19 +56,15 @@ export class MealsService {
           price,
           estimatedPrice,
           category,
-          restaurant: { connect: { id: restaurantId } },
-          images: mealImages.map(
-            (image: { public_id: string; url: string }) => ({
-              public_id: image.public_id,
-              url: image.url,
-            })
-          ),
+          restaurantId,
+          // restaurant: { connect: { id: restaurantId } },
+          images: newImages.images,
         },
       });
       return { message: "Meal Added Successfully" };
     } catch (error) {
       console.log(error);
-      return { message: error.message };
+      return { message: error };
     }
   }
 }

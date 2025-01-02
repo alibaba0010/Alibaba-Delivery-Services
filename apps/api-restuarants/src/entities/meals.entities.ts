@@ -1,6 +1,14 @@
 import { Field, ObjectType } from "@nestjs/graphql";
 
 @ObjectType()
+export class Images {
+  @Field()
+  public_id: string;
+
+  @Field()
+  url: string;
+}
+@ObjectType()
 export class Meal {
   @Field()
   id?: string;
@@ -19,9 +27,15 @@ export class Meal {
   @Field()
   category: string;
 
-  @Field()
-  images: string[];
+  @Field(() => [Images])
+  images: Images[];
 
   @Field()
   restaurantId: string;
+
+  @Field()
+  createdAt?: Date;
+
+  @Field()
+  updatedAt?: Date;
 }
