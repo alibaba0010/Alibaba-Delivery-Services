@@ -20,7 +20,7 @@ const Orders = ({ isDashboard }: { isDashboard?: boolean }) => {
   const rows: OrdersDataType[] = Array.from({ length: 10 }, (_, index) => ({
     id: `order-${index + 1}`,
     name: "shahriar sajeeb",
-    email: "support@becodemy.com",
+    email: "support@alibaba.com",
     title: "Juicy chicken burger",
     price: "12$",
     created_at: "2days ago",
