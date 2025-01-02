@@ -33,6 +33,8 @@ const restaurant_resolver_1 = __webpack_require__(19);
 const meals_resolver_1 = __webpack_require__(25);
 const meals_service_1 = __webpack_require__(26);
 const email_service_1 = __webpack_require__(13);
+const cloudinary_module_1 = __webpack_require__(31);
+const cloudinary_service_1 = __webpack_require__(27);
 let restaurantModule = class restaurantModule {
 };
 exports.restaurantModule = restaurantModule;
@@ -49,6 +51,7 @@ exports.restaurantModule = restaurantModule = tslib_1.__decorate([
                 },
             }),
             email_module_1.EmailModule,
+            cloudinary_module_1.CloudinaryModule,
         ],
         controllers: [],
         providers: [
@@ -60,6 +63,7 @@ exports.restaurantModule = restaurantModule = tslib_1.__decorate([
             meals_resolver_1.MealsResolver,
             meals_service_1.MealsService,
             email_service_1.EmailService,
+            cloudinary_service_1.CloudinaryService,
         ],
     })
 ], restaurantModule);
@@ -861,10 +865,10 @@ exports.MealsResolver = void 0;
 const tslib_1 = __webpack_require__(4);
 const graphql_1 = __webpack_require__(7);
 const meals_service_1 = __webpack_require__(26);
-const meals_types_1 = __webpack_require__(27);
+const meals_types_1 = __webpack_require__(29);
 const common_1 = __webpack_require__(5);
 const auth_guard_1 = __webpack_require__(24);
-const meals_dto_1 = __webpack_require__(28);
+const meals_dto_1 = __webpack_require__(30);
 let MealsResolver = class MealsResolver {
     // resolvers here
     constructor(mealsService) {
@@ -895,7 +899,7 @@ exports.MealsResolver = MealsResolver = tslib_1.__decorate([
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
-var _a, _b, _c;
+var _a, _b, _c, _d;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.MealsService = void 0;
 const tslib_1 = __webpack_require__(4);
@@ -903,29 +907,101 @@ const config_1 = __webpack_require__(6);
 const prisma_service_1 = __webpack_require__(10);
 const common_1 = __webpack_require__(5);
 const email_service_1 = __webpack_require__(13);
+const cloudinary_service_1 = __webpack_require__(27);
 let MealsService = class MealsService {
-    constructor(mprismService, configService, emailService) {
-        this.mprismService = mprismService;
+    constructor(prismaService, configService, emailService, cloudinaryService) {
+        this.prismaService = prismaService;
         this.configService = configService;
         this.emailService = emailService;
+        this.cloudinaryService = cloudinaryService;
     }
     // add(craete) a meal
     async addMeal(addMealDto, req) {
         const { name, description, price, estimatedPrice, category, images } = addMealDto;
         const restaurantId = req.restaurant.id;
         console.log("Resturant id : " + restaurantId);
-        return { message: "Meal Added Successfully" };
+        try {
+            let mealImages = [];
+            for (const image of images) {
+                console.log("Image : " + image);
+                if (typeof image === "string") {
+                    const data = await this.cloudinaryService.uploadImage(image);
+                    mealImages.push({
+                        public_id: data.public_id,
+                        url: data.secure_url,
+                    });
+                }
+            }
+            console.log("Saved images");
+            await this.prismaService.meals.create({
+                data: {
+                    name,
+                    description,
+                    price,
+                    estimatedPrice,
+                    category,
+                    restaurant: { connect: { id: restaurantId } },
+                    images: mealImages.map((image) => ({
+                        public_id: image.public_id,
+                        url: image.url,
+                    })),
+                },
+            });
+            return { message: "Meal Added Successfully" };
+        }
+        catch (error) {
+            console.log(error);
+            return { message: error.message };
+        }
     }
 };
 exports.MealsService = MealsService;
 exports.MealsService = MealsService = tslib_1.__decorate([
     (0, common_1.Injectable)(),
-    tslib_1.__metadata("design:paramtypes", [typeof (_a = typeof prisma_service_1.PrismaService !== "undefined" && prisma_service_1.PrismaService) === "function" ? _a : Object, typeof (_b = typeof config_1.ConfigService !== "undefined" && config_1.ConfigService) === "function" ? _b : Object, typeof (_c = typeof email_service_1.EmailService !== "undefined" && email_service_1.EmailService) === "function" ? _c : Object])
+    tslib_1.__metadata("design:paramtypes", [typeof (_a = typeof prisma_service_1.PrismaService !== "undefined" && prisma_service_1.PrismaService) === "function" ? _a : Object, typeof (_b = typeof config_1.ConfigService !== "undefined" && config_1.ConfigService) === "function" ? _b : Object, typeof (_c = typeof email_service_1.EmailService !== "undefined" && email_service_1.EmailService) === "function" ? _c : Object, typeof (_d = typeof cloudinary_service_1.CloudinaryService !== "undefined" && cloudinary_service_1.CloudinaryService) === "function" ? _d : Object])
 ], MealsService);
 
 
 /***/ }),
 /* 27 */
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.CloudinaryService = void 0;
+const tslib_1 = __webpack_require__(4);
+const common_1 = __webpack_require__(5);
+const cloudinary_1 = __webpack_require__(28);
+let CloudinaryService = class CloudinaryService {
+    constructor() { }
+    async uploadImage(image) {
+        try {
+            const result = await cloudinary_1.v2.uploader.upload(image, {
+                folder: "Mealsmod",
+                resource_type: "image",
+            });
+            return result;
+        }
+        catch (error) {
+            throw error;
+        }
+    }
+};
+exports.CloudinaryService = CloudinaryService;
+exports.CloudinaryService = CloudinaryService = tslib_1.__decorate([
+    (0, common_1.Injectable)(),
+    tslib_1.__metadata("design:paramtypes", [])
+], CloudinaryService);
+
+
+/***/ }),
+/* 28 */
+/***/ ((module) => {
+
+module.exports = require("cloudinary");
+
+/***/ }),
+/* 29 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
@@ -952,7 +1028,7 @@ exports.AddMealResponse = AddMealResponse = tslib_1.__decorate([
 
 
 /***/ }),
-/* 28 */
+/* 30 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
@@ -1015,6 +1091,54 @@ exports.DeleteMealDto = DeleteMealDto = tslib_1.__decorate([
 ], DeleteMealDto);
 
 
+/***/ }),
+/* 31 */
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.CloudinaryModule = void 0;
+const tslib_1 = __webpack_require__(4);
+const common_1 = __webpack_require__(5);
+const cloudinary_1 = __webpack_require__(32);
+const cloudinary_service_1 = __webpack_require__(27);
+let CloudinaryModule = class CloudinaryModule {
+};
+exports.CloudinaryModule = CloudinaryModule;
+exports.CloudinaryModule = CloudinaryModule = tslib_1.__decorate([
+    (0, common_1.Module)({
+        providers: [cloudinary_1.Cloudinary, cloudinary_service_1.CloudinaryService]
+    })
+], CloudinaryModule);
+
+
+/***/ }),
+/* 32 */
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.Cloudinary = void 0;
+const cloudinary_1 = __webpack_require__(28);
+const Cloudinary = {
+    provide: "CLOUDINARY",
+    useFactory: () => {
+        return cloudinary_1.v2.config({
+            cloud_name: process.env.CLOUD_NAME,
+            api_key: process.env.CLOUD_API_KEY,
+            api_secret: process.env.CLOUD_API_SECRET,
+        });
+    },
+};
+exports.Cloudinary = Cloudinary;
+
+
+/***/ }),
+/* 33 */
+/***/ ((module) => {
+
+module.exports = require("express");
+
 /***/ })
 /******/ 	]);
 /************************************************************************/
@@ -1052,8 +1176,10 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 const core_1 = __webpack_require__(1);
 const path_1 = __webpack_require__(2);
 const restaurant_module_1 = __webpack_require__(3);
+const express_1 = __webpack_require__(33);
 async function bootstrap() {
     const app = await core_1.NestFactory.create(restaurant_module_1.restaurantModule);
+    app.use((0, express_1.json)({ limit: "15mb" }));
     app.useStaticAssets((0, path_1.join)(__dirname, "..", "public"));
     app.setBaseViewsDir((0, path_1.join)(__dirname, "..", "apps/api-restuarants/email-templates"));
     app.setViewEngine("ejs");

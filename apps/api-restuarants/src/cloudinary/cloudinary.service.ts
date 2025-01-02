@@ -11,7 +11,10 @@ export class CloudinaryService {
   constructor() {}
   async uploadImage(image: string): Promise<CloudinaryResponse> {
     try {
-      const result = await cloudinary.uploader.upload(image);
+      const result = await cloudinary.uploader.upload(image, {
+        folder: "Mealsmod",
+        resource_type: "image",
+      });
       return result;
     } catch (error) {
       throw error;
