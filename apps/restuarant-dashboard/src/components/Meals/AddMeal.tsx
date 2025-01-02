@@ -4,6 +4,9 @@ import { useForm } from "react-hook-form";
 import Image from "next/image";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { mealCategoryItems } from "../../app/configs/constants";
+import { useMutation } from "@apollo/client";
+import { ADD_MEAL } from "../../graphql/actions/add.meal.action";
+import toast from "react-hot-toast";
 const formSchema = z.object({
   name: z.string().min(3).max(50),
   description: z.string().min(10).max(200),
@@ -14,18 +17,40 @@ const formSchema = z.object({
 });
 type addMealSchema = z.infer<typeof formSchema>;
 const AddMeal = () => {
+  const [addMealMutation] = useMutation(ADD_MEAL);
   const {
     handleSubmit,
     register,
     setValue,
     watch,
+    reset,
     formState: { errors, isSubmitting },
   } = useForm<addMealSchema>({
     resolver: zodResolver(formSchema),
   });
   const [drag, setDrag] = useState(false);
   const onSubmitHandler = async (data: addMealSchema) => {
-    console.log("Data", data);
+    const { name, description, price, estimatedPrice, category, images } = data;
+    try {
+      const response = await addMealMutation({
+        variables: {
+          addMealDto: {
+            name,
+            description,
+            price,
+            estimatedPrice,
+            category,
+            images,
+          },
+        },
+      });
+      console.log("Response: ", response);
+      toast.success("Meal added successfully");
+      reset();
+    } catch (error: any) {
+      console.log(error);
+      toast.error(error.message);
+    }
   };
   const handleDragOver = (e: DragEvent<HTMLLabelElement>) => {
     e.preventDefault();
