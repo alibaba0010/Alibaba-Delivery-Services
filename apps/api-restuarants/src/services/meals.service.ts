@@ -71,12 +71,12 @@ export class MealsService {
   async getCurrentRestaurantMeals(req: any, response: Response) {
     console.log("Restaurant request: ", req.restaurant);
     const { id: restaurantId } = req.restaurant;
-    const meal = await this.prismaService.meals.findMany({
+    const meals = await this.prismaService.meals.findMany({
       where: { restaurantId },
       include: { images: true, restaurant: true },
       orderBy: { createdAt: "desc" },
     });
-    return { meal };
+    return { meals };
   }
   // get all foods
 }

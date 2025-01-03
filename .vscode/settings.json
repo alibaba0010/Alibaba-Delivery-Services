@@ -1,9 +1,13 @@
 {
-  "files.watcherExclude": {
-    "**/node_modules/*/**": true
-  },
   "files.exclude": {
     "**/dist/**": true,
     "**/node_modules/*/**": true
+  },
+  "files.watcherExclude": {
+    "**/.git/objects/**": true,
+    "**/.git/subtree-cache/**": true,
+    "**/node_modules/**": true,
+    "**/samples": true,
+    "**/dist/**": true
   }
 }

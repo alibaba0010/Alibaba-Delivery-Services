@@ -15,7 +15,7 @@ export class AddMealResponse {
 @ObjectType()
 export class GetMealResponse {
   @Field(() => [Meal], { nullable: true })
-  meal?: Meals;
+  meals?: Meals;
 
   @Field(() => ErrorType, { nullable: true })
   error?: ErrorType;

@@ -5,10 +5,12 @@ import { Icons } from "../../utils/Icon";
 import { Box } from "@mui/material";
 import { GET_MEALS } from "../../graphql/actions/get.meal.action";
 import { useQuery } from "@apollo/client";
+import Loader from "../layout/Loader";
+import { format } from "timeago.js";
 
 const Meals = () => {
   const { data, loading } = useQuery(GET_MEALS);
-  console.log(data);
+  const { meals } = data?.getCurrentRestaurantMeals;
   const getMeals = async () => {};
   const columns: GridColDef<MealsDataType>[] = [
     { field: "id", headerName: "ID", flex: 0.3 },
@@ -34,71 +36,80 @@ const Meals = () => {
       },
     },
   ];
-  const rows: MealsDataType[] = Array.from({ length: 10 }, (_, index) => ({
-    id: `meal-${index + 1}`,
-    name: "shahriar sajeeb",
-    price: "12$",
-    totalOrders: 10,
-    created_at: "2days ago",
-  }));
+  const rows: MealsDataType[] = [];
+  meals?.map((i: MealsDataType) => {
+    rows.push({
+      id: i.id,
+      name: i.name,
+      price: i.price + "$",
+      totalOrders: 10,
+      createdAt: format(i.createdAt),
+    });
+  });
   return (
-    <Box>
-      <Box
-        m={"40px 0 0 0"}
-        height={"85vh"}
-        overflow={"hidden"}
-        sx={{
-          "& .MuiDataGrid-root": {
-            border: "none",
-            outline: "none",
-          },
-          "& .css-pqjvzy-MuiSvgIcon-root-MuiSelect-icon": {
-            color: "#fff",
-          },
-          "& .MuiDataGrid-sortIcon": {
-            color: "#fff",
-          },
-          "& .MuiDataGrid-row": {
-            color: "#fff",
-            borderBottom: "1px solid #ffffff30!important",
-          },
-          "& .MuiTablePagination-root": {
-            color: "#fff",
-          },
-          "& .MuiDataGrid-cell": {
-            borderBottom: "none!important",
-          },
-          "& .name-column--cell": {
-            color: "#fff",
-          },
-          "& .MuiDataGrid-columnHeaders": {
-            backgroundColor: "#3e4396",
-            borderBottom: "none",
-            color: "#fff",
-          },
-          "& .MuiDataGrid-virtualScroller": {
-            backgroundColor: "#1F2A40",
-          },
-          "& .MuiDataGrid-footerContainer": {
-            color: "#fff",
-            borderTop: "none",
-            backgroundColor: "#3e4396",
-          },
-          "& .MuiCheckbox-root": {
-            color: `#b7ebde !important`,
-          },
-          "& .MuiDataGrid-toolbarContainer .MuiButton-text": {
-            color: `#fff !important`,
-          },
-        }}
-      >
-        <DataGrid
-          // checkboxSelection={!isDashboard}
-          rows={rows}
-          columns={columns}
-        />
-      </Box>
-    </Box>
+    <>
+      {loading ? (
+        <Loader />
+      ) : (
+        <Box>
+          <Box
+            m={"40px 0 0 0"}
+            height={"85vh"}
+            overflow={"hidden"}
+            sx={{
+              "& .MuiDataGrid-root": {
+                border: "none",
+                outline: "none",
+              },
+              "& .css-pqjvzy-MuiSvgIcon-root-MuiSelect-icon": {
+                color: "#fff",
+              },
+              "& .MuiDataGrid-sortIcon": {
+                color: "#fff",
+              },
+              "& .MuiDataGrid-row": {
+                color: "#fff",
+                borderBottom: "1px solid #ffffff30!important",
+              },
+              "& .MuiTablePagination-root": {
+                color: "#fff",
+              },
+              "& .MuiDataGrid-cell": {
+                borderBottom: "none!important",
+              },
+              "& .name-column--cell": {
+                color: "#fff",
+              },
+              "& .MuiDataGrid-columnHeaders": {
+                backgroundColor: "#3e4396",
+                borderBottom: "none",
+                color: "#fff",
+              },
+              "& .MuiDataGrid-virtualScroller": {
+                backgroundColor: "#1F2A40",
+              },
+              "& .MuiDataGrid-footerContainer": {
+                color: "#fff",
+                borderTop: "none",
+                backgroundColor: "#3e4396",
+              },
+              "& .MuiCheckbox-root": {
+                color: `#b7ebde !important`,
+              },
+              "& .MuiDataGrid-toolbarContainer .MuiButton-text": {
+                color: `#fff !important`,
+              },
+            }}
+          >
+            <DataGrid
+              // checkboxSelection={!isDashboard}
+              rows={rows}
+              columns={columns}
+            />
+          </Box>
+        </Box>
+      )}
+    </>
   );
 };
 

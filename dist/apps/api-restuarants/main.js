@@ -814,6 +814,7 @@ let AuthGuard = class AuthGuard {
                 if (decoded?.exp * 1000 < Date.now()) {
                     await this.updateAccessToken(req);
                 }
+                console.log("Decoded token", decoded);
             }
             return true;
         }
@@ -979,12 +980,12 @@ let MealsService = class MealsService {
     async getCurrentRestaurantMeals(req, response) {
         console.log("Restaurant request: ", req.restaurant);
         const { id: restaurantId } = req.restaurant;
-        const meal = await this.prismaService.meals.findMany({
+        const meals = await this.prismaService.meals.findMany({
             where: { restaurantId },
             include: { images: true, restaurant: true },
             orderBy: { createdAt: "desc" },
         });
-        return { meal };
+        return { meals };
     }
 };
 exports.MealsService = MealsService;
@@ -1065,7 +1066,7 @@ exports.GetMealResponse = GetMealResponse;
 tslib_1.__decorate([
     (0, graphql_1.Field)(() => [meals_entities_1.Meal], { nullable: true }),
     tslib_1.__metadata("design:type", typeof (_b = typeof client_1.Meals !== "undefined" && client_1.Meals) === "function" ? _b : Object)
-], GetMealResponse.prototype, "meal", void 0);
+], GetMealResponse.prototype, "meals", void 0);
 tslib_1.__decorate([
     (0, graphql_1.Field)(() => user_type_1.ErrorType, { nullable: true }),
     tslib_1.__metadata("design:type", typeof (_c = typeof user_type_1.ErrorType !== "undefined" && user_type_1.ErrorType) === "function" ? _c : Object)

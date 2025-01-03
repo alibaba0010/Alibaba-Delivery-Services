@@ -43,6 +43,7 @@ export class AuthGuard implements CanActivate {
         if (decoded?.exp * 1000 < Date.now()) {
           await this.updateAccessToken(req);
         }
+        console.log("Decoded token", decoded);
       }
       return true;
     } catch (error) {

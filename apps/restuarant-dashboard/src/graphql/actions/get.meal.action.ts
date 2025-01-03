@@ -3,7 +3,7 @@ import { gql, DocumentNode } from "@apollo/client";
 export const GET_MEALS: DocumentNode = gql`
   query {
     getCurrentRestaurantMeals {
-      meal {
+      meals {
         id
         name
         price

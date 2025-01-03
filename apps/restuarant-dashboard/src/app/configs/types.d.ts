@@ -40,5 +40,5 @@ type MealsDataType = {
   name: string;
   price: number | string;
   totalOrders: number;
-  created_at: Date | string;
+  createdAt: Date | string;
 };
