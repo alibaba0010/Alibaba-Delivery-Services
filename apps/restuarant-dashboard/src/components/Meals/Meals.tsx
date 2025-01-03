@@ -10,14 +10,14 @@ import { format } from "timeago.js";
 
 const Meals = () => {
   const { data, loading } = useQuery(GET_MEALS);
-  const { meals } = data?.getCurrentRestaurantMeals;
+  const meals = data?.getCurrentRestaurantMeals.meals;
   const getMeals = async () => {};
   const columns: GridColDef<MealsDataType>[] = [
     { field: "id", headerName: "ID", flex: 0.3 },
     { field: "name", headerName: "Name", flex: 1 },
     { field: "price", headerName: "Price", flex: 0.5 },
     { field: "totalOrders", headerName: "Total Orders", flex: 0.5 },
-    { field: "created_at", headerName: "Created At", flex: 0.5 },
+    { field: "createdAt", headerName: "Created At", flex: 0.5 },
     {
       field: " ",
       headerName: "Actions",

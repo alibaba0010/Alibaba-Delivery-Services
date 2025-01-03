@@ -28,7 +28,7 @@ type OrdersDataType = {
   email: string;
   title: string;
   price: number | string;
-  created_at: Date | string;
+  createdAt: Date | string;
 };
 
 type MealCategoryType = {

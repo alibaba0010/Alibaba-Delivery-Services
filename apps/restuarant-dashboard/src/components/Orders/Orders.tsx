@@ -14,7 +14,7 @@ const Orders = ({ isDashboard }: { isDashboard?: boolean }) => {
     ...(isDashboard ? [] : [{ field: "email", headerName: "Email", flex: 1 }]),
     { field: "title", headerName: "Meal", flex: 0.8 },
     { field: "price", headerName: "Price", flex: 0.5 },
-    { field: "created_at", headerName: "Created At", flex: 0.5 },
+    { field: "createdAt", headerName: "Created At", flex: 0.5 },
   ];
 
   const rows: OrdersDataType[] = Array.from({ length: 10 }, (_, index) => ({
@@ -23,7 +23,7 @@ const Orders = ({ isDashboard }: { isDashboard?: boolean }) => {
     email: "support@alibaba.com",
     title: "Juicy chicken burger",
     price: "12$",
-    created_at: "2days ago",
+    createdAt: "2days ago",
   }));
 
   return (
