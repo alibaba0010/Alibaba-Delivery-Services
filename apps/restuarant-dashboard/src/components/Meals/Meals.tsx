@@ -3,8 +3,13 @@ import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import React from "react";
 import { Icons } from "../../utils/Icon";
 import { Box } from "@mui/material";
+import { GET_MEALS } from "../../graphql/actions/get.meal.action";
+import { useQuery } from "@apollo/client";
 
 const Meals = () => {
+  const { data, loading } = useQuery(GET_MEALS);
+  console.log(data);
+  const getMeals = async () => {};
   const columns: GridColDef<MealsDataType>[] = [
     { field: "id", headerName: "ID", flex: 0.3 },
     { field: "name", headerName: "Name", flex: 1 },

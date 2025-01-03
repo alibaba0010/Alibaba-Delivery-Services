@@ -797,23 +797,29 @@ let AuthGuard = class AuthGuard {
         this.config = config;
     }
     async canActivate(context) {
-        const gqlContext = graphql_1.GqlExecutionContext.create(context);
-        const { req } = gqlContext.getContext();
-        const accessToken = req.headers.accesstoken;
-        const refreshToken = req.headers.refreshtoken;
-        if (!accessToken || !refreshToken) {
-            throw new common_1.UnauthorizedException("Please login to access this resource!");
-        }
-        if (accessToken) {
-            const decoded = this.jwtService.verify(accessToken, {
-                ignoreExpiration: true,
-                secret: this.config.get("ACCESS_TOKEN_SECRET"),
-            });
-            if (decoded?.exp * 1000 < Date.now()) {
-                await this.updateAccessToken(req);
+        try {
+            const gqlContext = graphql_1.GqlExecutionContext.create(context);
+            const { req } = gqlContext.getContext();
+            const accessToken = req.headers.accesstoken;
+            const refreshToken = req.headers.refreshtoken;
+            console.log(`Access token: ${accessToken} refresh token: ${refreshToken}`);
+            if (!accessToken || !refreshToken) {
+                throw new common_1.UnauthorizedException("Please login to access this resource!");
             }
+            if (accessToken) {
+                const decoded = this.jwtService.verify(accessToken, {
+                    ignoreExpiration: true,
+                    secret: this.config.get("ACCESS_TOKEN_SECRET"),
+                });
+                if (decoded?.exp * 1000 < Date.now()) {
+                    await this.updateAccessToken(req);
+                }
+            }
+            return true;
         }
-        return true;
+        catch (error) {
+            throw new common_1.BadGatewayException(error.message);
+        }
     }
     async updateAccessToken(req) {
         try {
@@ -928,7 +934,7 @@ let MealsService = class MealsService {
     }
     // add(craete) a meal
     async addMeal(addMealDto, req, response) {
-        console.log("Request: ", req.restaurant.id);
+        console.log("Restaurant request: ", req.restaurant);
         const { name, description, price, estimatedPrice, category, images } = addMealDto;
         const restaurantId = req.restaurant.id;
         try {
@@ -971,7 +977,7 @@ let MealsService = class MealsService {
     }
     // get all fodds for the currrent logged in restaurant
     async getCurrentRestaurantMeals(req, response) {
-        console.log("Request: ", req.restaurant.id);
+        console.log("Restaurant request: ", req.restaurant);
         const { id: restaurantId } = req.restaurant;
         const meal = await this.prismaService.meals.findMany({
             where: { restaurantId },

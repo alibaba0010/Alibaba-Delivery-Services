@@ -18,14 +18,14 @@ export const metadata: Metadata = {
   title: "Alibaba Delivery",
   description: "Alibaba Delivery services",
 };
-const header = headers();
-const pathName = header.get("next-url");
-console.log(pathName);
 export default function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const header = headers();
+  const pathName = header.get("next-url");
+  console.log("Pathname...........", pathName);
   return (
     <html lang="en">
       <body className={`${poppins.variable} ${inter.variable}`}>

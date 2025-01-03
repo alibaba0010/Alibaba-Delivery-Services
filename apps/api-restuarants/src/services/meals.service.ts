@@ -21,7 +21,8 @@ export class MealsService {
   ) {}
   // add(craete) a meal
   async addMeal(addMealDto: AddMealDto, req: any, response: Response) {
-    console.log("Request: ", req.restaurant.id);
+    console.log("Restaurant request: ", req.restaurant);
+
     const { name, description, price, estimatedPrice, category, images } =
       addMealDto;
     const restaurantId = req.restaurant.id;
@@ -68,7 +69,7 @@ export class MealsService {
   }
   // get all fodds for the currrent logged in restaurant
   async getCurrentRestaurantMeals(req: any, response: Response) {
-    console.log("Request: ", req.restaurant.id);
+    console.log("Restaurant request: ", req.restaurant);
     const { id: restaurantId } = req.restaurant;
     const meal = await this.prismaService.meals.findMany({
       where: { restaurantId },

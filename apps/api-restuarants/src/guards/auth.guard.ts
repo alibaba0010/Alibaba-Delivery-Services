@@ -1,4 +1,5 @@
 import {
+  BadGatewayException,
   CanActivate,
   ExecutionContext,
   Injectable,
@@ -19,25 +20,34 @@ export class AuthGuard implements CanActivate {
   ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
-    const gqlContext = GqlExecutionContext.create(context);
-    const { req } = gqlContext.getContext();
+    try {
+      const gqlContext = GqlExecutionContext.create(context);
+      const { req } = gqlContext.getContext();
 
-    const accessToken = req.headers.accesstoken as string;
-    const refreshToken = req.headers.refreshtoken as string;
-    if (!accessToken || !refreshToken) {
-      throw new UnauthorizedException("Please login to access this resource!");
-    }
-    if (accessToken) {
-      const decoded = this.jwtService.verify(accessToken, {
-        ignoreExpiration: true,
-        secret: this.config.get<string>("ACCESS_TOKEN_SECRET"),
-      });
-
-      if (decoded?.exp * 1000 < Date.now()) {
-        await this.updateAccessToken(req);
+      const accessToken = req.headers.accesstoken as string;
+      const refreshToken = req.headers.refreshtoken as string;
+      console.log(
+        `Access token: ${accessToken} refresh token: ${refreshToken}`
+      );
+      if (!accessToken || !refreshToken) {
+        throw new UnauthorizedException(
+          "Please login to access this resource!"
+        );
       }
+      if (accessToken) {
+        const decoded = this.jwtService.verify(accessToken, {
+          ignoreExpiration: true,
+          secret: this.config.get<string>("ACCESS_TOKEN_SECRET"),
+        });
+
+        if (decoded?.exp * 1000 < Date.now()) {
+          await this.updateAccessToken(req);
+        }
+      }
+      return true;
+    } catch (error) {
+      throw new BadGatewayException(error.message);
     }
-    return true;
   }
 
   private async updateAccessToken(req: any): Promise<void> {
