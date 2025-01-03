@@ -21,6 +21,7 @@ export class MealsService {
   ) {}
   // add(craete) a meal
   async addMeal(addMealDto: AddMealDto, req: any, response: Response) {
+    console.log("Request: ", req.restaurant);
     const { name, description, price, estimatedPrice, category, images } =
       addMealDto;
     const restaurantId = req.restaurant.id;
@@ -30,7 +31,6 @@ export class MealsService {
       for (const image of images) {
         if (typeof image === "string") {
           const data = await this.cloudinaryService.uploadImage(image);
-          console.log("Data : " + data);
           mealImages.push({
             public_id: data.public_id,
             url: data.secure_url,
@@ -48,7 +48,6 @@ export class MealsService {
         },
       };
 
-      console.log("New images: ", newImages);
       await this.prismaService.meals.create({
         data: {
           name,
@@ -67,4 +66,17 @@ export class MealsService {
       return { message: error };
     }
   }
+  // get all fodds for the currrent logged in restaurant
+  async getCurrentRestaurantMeals(req: any, response: Response) {
+    console.log("Request: ", req.restaurant);
+    const { id: restaurantId } = req.restaurant;
+    const meals = await this.prismaService.meals.findMany({
+      where: { restaurantId },
+      include: { images: true, restaurant: true },
+      orderBy: { createdAt: "desc" },
+    });
+    console.log("Meals:  ", meals);
+    return { meals };
+  }
+  // get all foods
 }

@@ -3,18 +3,19 @@ import {
   ExecutionContext,
   Injectable,
   UnauthorizedException,
-} from '@nestjs/common';
-import { GqlExecutionContext } from '@nestjs/graphql';
-import { JwtService } from '@nestjs/jwt';
-import { ConfigService } from '@nestjs/config';
-import { PrismaService } from '../../prisma/prisma.service';
+} from "@nestjs/common";
+import { GqlExecutionContext } from "@nestjs/graphql";
+import { JwtService } from "@nestjs/jwt";
+import { ConfigService } from "@nestjs/config";
+import { PrismaService } from "../../prisma/prisma.service";
+import { decode } from "punycode";
 
 @Injectable()
 export class AuthGuard implements CanActivate {
   constructor(
     private readonly jwtService: JwtService,
     private readonly prisma: PrismaService,
-    private readonly config: ConfigService,
+    private readonly config: ConfigService
   ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
@@ -23,21 +24,19 @@ export class AuthGuard implements CanActivate {
 
     const accessToken = req.headers.accesstoken as string;
     const refreshToken = req.headers.refreshtoken as string;
-
     if (!accessToken || !refreshToken) {
-      throw new UnauthorizedException('Please login to access this resource!');
+      throw new UnauthorizedException("Please login to access this resource!");
     }
     if (accessToken) {
       const decoded = this.jwtService.verify(accessToken, {
         ignoreExpiration: true,
-        secret: this.config.get<string>('ACCESS_TOKEN_SECRET'),
+        secret: this.config.get<string>("ACCESS_TOKEN_SECRET"),
       });
 
       if (decoded?.exp * 1000 < Date.now()) {
         await this.updateAccessToken(req);
       }
     }
-
     return true;
   }
 
@@ -46,14 +45,14 @@ export class AuthGuard implements CanActivate {
       const refreshTokenData = req.headers.refreshtoken as string;
 
       const decoded = this.jwtService.verify(refreshTokenData, {
-        secret: this.config.get<string>('REFRESH_TOKEN_SECRET'),
+        secret: this.config.get<string>("REFRESH_TOKEN_SECRET"),
       });
 
       const expirationTime = decoded.exp * 1000;
 
       if (expirationTime < Date.now()) {
         throw new UnauthorizedException(
-          'Please login to access this resource!',
+          "Please login to access this resource!"
         );
       }
 
@@ -66,17 +65,17 @@ export class AuthGuard implements CanActivate {
       const accessToken = this.jwtService.sign(
         { id: restaurant.id },
         {
-          secret: this.config.get<string>('ACCESS_TOKEN_SECRET'),
-          expiresIn: '1m',
-        },
+          secret: this.config.get<string>("ACCESS_TOKEN_SECRET"),
+          expiresIn: "1m",
+        }
       );
 
       const refreshToken = this.jwtService.sign(
         { id: restaurant.id },
         {
-          secret: this.config.get<string>('REFRESH_TOKEN_SECRET'),
-          expiresIn: '7d',
-        },
+          secret: this.config.get<string>("REFRESH_TOKEN_SECRET"),
+          expiresIn: "7d",
+        }
       );
 
       req.accesstoken = accessToken;

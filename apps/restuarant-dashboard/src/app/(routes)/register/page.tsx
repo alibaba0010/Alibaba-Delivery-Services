@@ -1,4 +1,4 @@
-import Register from "../../../shared/views/auth/register";
+import Register from "../../../components/auth/register";
 
 const Page = () => {
   return (

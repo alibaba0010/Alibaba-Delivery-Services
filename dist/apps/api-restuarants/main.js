@@ -33,7 +33,7 @@ const restaurant_resolver_1 = __webpack_require__(19);
 const meals_resolver_1 = __webpack_require__(25);
 const meals_service_1 = __webpack_require__(26);
 const email_service_1 = __webpack_require__(13);
-const cloudinary_module_1 = __webpack_require__(31);
+const cloudinary_module_1 = __webpack_require__(32);
 const cloudinary_service_1 = __webpack_require__(27);
 let restaurantModule = class restaurantModule {
 };
@@ -802,12 +802,12 @@ let AuthGuard = class AuthGuard {
         const accessToken = req.headers.accesstoken;
         const refreshToken = req.headers.refreshtoken;
         if (!accessToken || !refreshToken) {
-            throw new common_1.UnauthorizedException('Please login to access this resource!');
+            throw new common_1.UnauthorizedException("Please login to access this resource!");
         }
         if (accessToken) {
             const decoded = this.jwtService.verify(accessToken, {
                 ignoreExpiration: true,
-                secret: this.config.get('ACCESS_TOKEN_SECRET'),
+                secret: this.config.get("ACCESS_TOKEN_SECRET"),
             });
             if (decoded?.exp * 1000 < Date.now()) {
                 await this.updateAccessToken(req);
@@ -819,11 +819,11 @@ let AuthGuard = class AuthGuard {
         try {
             const refreshTokenData = req.headers.refreshtoken;
             const decoded = this.jwtService.verify(refreshTokenData, {
-                secret: this.config.get('REFRESH_TOKEN_SECRET'),
+                secret: this.config.get("REFRESH_TOKEN_SECRET"),
             });
             const expirationTime = decoded.exp * 1000;
             if (expirationTime < Date.now()) {
-                throw new common_1.UnauthorizedException('Please login to access this resource!');
+                throw new common_1.UnauthorizedException("Please login to access this resource!");
             }
             const restaurant = await this.prisma.restaurant.findUnique({
                 where: {
@@ -831,12 +831,12 @@ let AuthGuard = class AuthGuard {
                 },
             });
             const accessToken = this.jwtService.sign({ id: restaurant.id }, {
-                secret: this.config.get('ACCESS_TOKEN_SECRET'),
-                expiresIn: '1m',
+                secret: this.config.get("ACCESS_TOKEN_SECRET"),
+                expiresIn: "1m",
             });
             const refreshToken = this.jwtService.sign({ id: restaurant.id }, {
-                secret: this.config.get('REFRESH_TOKEN_SECRET'),
-                expiresIn: '7d',
+                secret: this.config.get("REFRESH_TOKEN_SECRET"),
+                expiresIn: "7d",
             });
             req.accesstoken = accessToken;
             req.refreshtoken = refreshToken;
@@ -868,7 +868,7 @@ const meals_service_1 = __webpack_require__(26);
 const meals_types_1 = __webpack_require__(29);
 const common_1 = __webpack_require__(5);
 const auth_guard_1 = __webpack_require__(24);
-const meals_dto_1 = __webpack_require__(30);
+const meals_dto_1 = __webpack_require__(31);
 let MealsResolver = class MealsResolver {
     // resolvers here
     constructor(mealsService) {
@@ -876,6 +876,9 @@ let MealsResolver = class MealsResolver {
     }
     async addMeal(addMealDto, context) {
         return await this.mealsService.addMeal(addMealDto, context.req, context.res);
+    }
+    async getCurrentRestaurantMeals(context) {
+        return await this.mealsService.getCurrentRestaurantMeals(context.req, context.res);
     }
 };
 exports.MealsResolver = MealsResolver;
@@ -888,6 +891,14 @@ tslib_1.__decorate([
     tslib_1.__metadata("design:paramtypes", [typeof (_b = typeof meals_dto_1.AddMealDto !== "undefined" && meals_dto_1.AddMealDto) === "function" ? _b : Object, Object]),
     tslib_1.__metadata("design:returntype", typeof (_c = typeof Promise !== "undefined" && Promise) === "function" ? _c : Object)
 ], MealsResolver.prototype, "addMeal", null);
+tslib_1.__decorate([
+    (0, graphql_1.Query)(() => meals_types_1.GetMealResponse),
+    (0, common_1.UseGuards)(auth_guard_1.AuthGuard),
+    tslib_1.__param(0, (0, graphql_1.Context)()),
+    tslib_1.__metadata("design:type", Function),
+    tslib_1.__metadata("design:paramtypes", [Object]),
+    tslib_1.__metadata("design:returntype", Promise)
+], MealsResolver.prototype, "getCurrentRestaurantMeals", null);
 exports.MealsResolver = MealsResolver = tslib_1.__decorate([
     (0, graphql_1.Resolver)("Meals"),
     tslib_1.__metadata("design:paramtypes", [typeof (_a = typeof meals_service_1.MealsService !== "undefined" && meals_service_1.MealsService) === "function" ? _a : Object])
@@ -917,6 +928,7 @@ let MealsService = class MealsService {
     }
     // add(craete) a meal
     async addMeal(addMealDto, req, response) {
+        console.log("Request: ", req.restaurant);
         const { name, description, price, estimatedPrice, category, images } = addMealDto;
         const restaurantId = req.restaurant.id;
         try {
@@ -924,7 +936,6 @@ let MealsService = class MealsService {
             for (const image of images) {
                 if (typeof image === "string") {
                     const data = await this.cloudinaryService.uploadImage(image);
-                    console.log("Data : " + data);
                     mealImages.push({
                         public_id: data.public_id,
                         url: data.secure_url,
@@ -939,7 +950,6 @@ let MealsService = class MealsService {
                     })),
                 },
             };
-            console.log("New images: ", newImages);
             await this.prismaService.meals.create({
                 data: {
                     name,
@@ -958,6 +968,18 @@ let MealsService = class MealsService {
             console.log(error);
             return { message: error };
         }
+    }
+    // get all fodds for the currrent logged in restaurant
+    async getCurrentRestaurantMeals(req, response) {
+        console.log("Request: ", req.restaurant);
+        const { id: restaurantId } = req.restaurant;
+        const meals = await this.prismaService.meals.findMany({
+            where: { restaurantId },
+            include: { images: true, restaurant: true },
+            orderBy: { createdAt: "desc" },
+        });
+        console.log("Meals:  ", meals);
+        return { meals };
     }
 };
 exports.MealsService = MealsService;
@@ -1010,12 +1032,14 @@ module.exports = require("cloudinary");
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
-var _a;
+var _a, _b, _c;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.AddMealResponse = void 0;
+exports.GetMealResponse = exports.AddMealResponse = void 0;
 const tslib_1 = __webpack_require__(4);
 const graphql_1 = __webpack_require__(7);
 const user_type_1 = __webpack_require__(20);
+const meals_entities_1 = __webpack_require__(30);
+const client_1 = __webpack_require__(11);
 let AddMealResponse = class AddMealResponse {
 };
 exports.AddMealResponse = AddMealResponse;
@@ -1030,10 +1054,96 @@ tslib_1.__decorate([
 exports.AddMealResponse = AddMealResponse = tslib_1.__decorate([
     (0, graphql_1.ObjectType)()
 ], AddMealResponse);
+let GetMealResponse = class GetMealResponse {
+};
+exports.GetMealResponse = GetMealResponse;
+tslib_1.__decorate([
+    (0, graphql_1.Field)(() => [meals_entities_1.Meal], { nullable: true }),
+    tslib_1.__metadata("design:type", typeof (_b = typeof client_1.Meals !== "undefined" && client_1.Meals) === "function" ? _b : Object)
+], GetMealResponse.prototype, "meal", void 0);
+tslib_1.__decorate([
+    (0, graphql_1.Field)(() => user_type_1.ErrorType, { nullable: true }),
+    tslib_1.__metadata("design:type", typeof (_c = typeof user_type_1.ErrorType !== "undefined" && user_type_1.ErrorType) === "function" ? _c : Object)
+], GetMealResponse.prototype, "error", void 0);
+exports.GetMealResponse = GetMealResponse = tslib_1.__decorate([
+    (0, graphql_1.ObjectType)()
+], GetMealResponse);
 
 
 /***/ }),
 /* 30 */
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+
+var _a, _b;
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.Meal = exports.Images = void 0;
+const tslib_1 = __webpack_require__(4);
+const graphql_1 = __webpack_require__(7);
+let Images = class Images {
+};
+exports.Images = Images;
+tslib_1.__decorate([
+    (0, graphql_1.Field)(),
+    tslib_1.__metadata("design:type", String)
+], Images.prototype, "public_id", void 0);
+tslib_1.__decorate([
+    (0, graphql_1.Field)(),
+    tslib_1.__metadata("design:type", String)
+], Images.prototype, "url", void 0);
+exports.Images = Images = tslib_1.__decorate([
+    (0, graphql_1.ObjectType)()
+], Images);
+let Meal = class Meal {
+};
+exports.Meal = Meal;
+tslib_1.__decorate([
+    (0, graphql_1.Field)(),
+    tslib_1.__metadata("design:type", String)
+], Meal.prototype, "id", void 0);
+tslib_1.__decorate([
+    (0, graphql_1.Field)(),
+    tslib_1.__metadata("design:type", String)
+], Meal.prototype, "name", void 0);
+tslib_1.__decorate([
+    (0, graphql_1.Field)(),
+    tslib_1.__metadata("design:type", String)
+], Meal.prototype, "description", void 0);
+tslib_1.__decorate([
+    (0, graphql_1.Field)(),
+    tslib_1.__metadata("design:type", Number)
+], Meal.prototype, "price", void 0);
+tslib_1.__decorate([
+    (0, graphql_1.Field)(),
+    tslib_1.__metadata("design:type", Number)
+], Meal.prototype, "estimatedPrice", void 0);
+tslib_1.__decorate([
+    (0, graphql_1.Field)(),
+    tslib_1.__metadata("design:type", String)
+], Meal.prototype, "category", void 0);
+tslib_1.__decorate([
+    (0, graphql_1.Field)(() => [Images]),
+    tslib_1.__metadata("design:type", Array)
+], Meal.prototype, "images", void 0);
+tslib_1.__decorate([
+    (0, graphql_1.Field)(),
+    tslib_1.__metadata("design:type", String)
+], Meal.prototype, "restaurantId", void 0);
+tslib_1.__decorate([
+    (0, graphql_1.Field)(),
+    tslib_1.__metadata("design:type", typeof (_a = typeof Date !== "undefined" && Date) === "function" ? _a : Object)
+], Meal.prototype, "createdAt", void 0);
+tslib_1.__decorate([
+    (0, graphql_1.Field)(),
+    tslib_1.__metadata("design:type", typeof (_b = typeof Date !== "undefined" && Date) === "function" ? _b : Object)
+], Meal.prototype, "updatedAt", void 0);
+exports.Meal = Meal = tslib_1.__decorate([
+    (0, graphql_1.ObjectType)()
+], Meal);
+
+
+/***/ }),
+/* 31 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
@@ -1097,7 +1207,7 @@ exports.DeleteMealDto = DeleteMealDto = tslib_1.__decorate([
 
 
 /***/ }),
-/* 31 */
+/* 32 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
@@ -1105,7 +1215,7 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.CloudinaryModule = void 0;
 const tslib_1 = __webpack_require__(4);
 const common_1 = __webpack_require__(5);
-const cloudinary_1 = __webpack_require__(32);
+const cloudinary_1 = __webpack_require__(33);
 const cloudinary_service_1 = __webpack_require__(27);
 let CloudinaryModule = class CloudinaryModule {
 };
@@ -1118,7 +1228,7 @@ exports.CloudinaryModule = CloudinaryModule = tslib_1.__decorate([
 
 
 /***/ }),
-/* 32 */
+/* 33 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
@@ -1139,7 +1249,7 @@ exports.Cloudinary = Cloudinary;
 
 
 /***/ }),
-/* 33 */
+/* 34 */
 /***/ ((module) => {
 
 module.exports = require("express");
@@ -1181,7 +1291,7 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 const core_1 = __webpack_require__(1);
 const path_1 = __webpack_require__(2);
 const restaurant_module_1 = __webpack_require__(3);
-const express_1 = __webpack_require__(33);
+const express_1 = __webpack_require__(34);
 async function bootstrap() {
     const app = await core_1.NestFactory.create(restaurant_module_1.restaurantModule);
     app.use((0, express_1.json)({ limit: "15mb" }));

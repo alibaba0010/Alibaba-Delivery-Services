@@ -1,19 +1,19 @@
-'use client';
-import { z } from 'zod';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai';
-import { useState } from 'react';
-import Link from 'next/link';
-import { useMutation } from '@apollo/client';
-import { LOGIN_RESTAURANT } from '../../../graphql/actions/login.restaurant';
-import toast from 'react-hot-toast';
-import Cookies from 'js-cookie';
-import { useRouter } from 'next/navigation';
+"use client";
+import { z } from "zod";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
+import { useState } from "react";
+import Link from "next/link";
+import { useMutation } from "@apollo/client";
+import toast from "react-hot-toast";
+import Cookies from "js-cookie";
+import { useRouter } from "next/navigation";
+import { LOGIN_RESTAURANT } from "../../graphql/actions/login.restaurant";
 
 const formSchema = z.object({
   email: z.string().email(),
-  password: z.string().min(8, 'Password must be at least 8characters long!'),
+  password: z.string().min(8, "Password must be at least 8characters long!"),
 });
 
 type LoginSchema = z.infer<typeof formSchema>;
@@ -44,11 +44,11 @@ const Login = () => {
         if (response.error) {
           toast.error(response.error.message);
         } else {
-          Cookies.set('refresh_token', response.refreshToken);
-          Cookies.set('access_token', response.accessToken);
+          Cookies.set("refresh_token", response.refreshToken);
+          Cookies.set("access_token", response.accessToken);
           reset();
-          toast.success('Login successful!');
-          router.push('/');
+          toast.success("Login successful!");
+          router.push("/");
         }
       })
       .catch((error) => {
@@ -62,7 +62,7 @@ const Login = () => {
         <form onSubmit={handleSubmit(onSubmit)} className="!font-Poppins">
           <label className="label block">Enter your email</label>
           <input
-            {...register('email')}
+            {...register("email")}
             type="email"
             placeholder="loginmail@gmail.com"
             className="input"
@@ -77,8 +77,8 @@ const Login = () => {
               Enter your password
             </label>
             <input
-              {...register('password')}
-              type={!show ? 'password' : 'text'}
+              {...register("password")}
+              type={!show ? "password" : "text"}
               placeholder="password!@%"
               className="input"
             />
@@ -110,7 +110,7 @@ const Login = () => {
           <h5 className="text-center pt-4 font-Poppins text-[16px]">
             Not have any account?
             <Link
-              href={'/register'}
+              href={"/register"}
               className="text-[#2190ff] pl-1 cursor-pointer font-Poppins"
             >
               Sign up

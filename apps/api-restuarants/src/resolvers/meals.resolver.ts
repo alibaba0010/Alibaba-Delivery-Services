@@ -1,6 +1,6 @@
-import { Args, Context, Mutation, Resolver } from "@nestjs/graphql";
+import { Args, Context, Mutation, Resolver, Query } from "@nestjs/graphql";
 import { MealsService } from "../services/meals.service";
-import { AddMealResponse } from "../types/meals.types";
+import { AddMealResponse, GetMealResponse } from "../types/meals.types";
 import { UseGuards } from "@nestjs/common";
 import { AuthGuard } from "../guards/auth.guard";
 import { AddMealDto } from "../dto/meals.dto";
@@ -18,6 +18,16 @@ export class MealsResolver {
   ): Promise<AddMealResponse> {
     return await this.mealsService.addMeal(
       addMealDto,
+      context.req,
+      context.res
+    );
+  }
+  @Query(() => GetMealResponse)
+  @UseGuards(AuthGuard)
+  async getCurrentRestaurantMeals(
+    @Context() context: { req: Request; res: Response }
+  ) {
+    return await this.mealsService.getCurrentRestaurantMeals(
       context.req,
       context.res
     );

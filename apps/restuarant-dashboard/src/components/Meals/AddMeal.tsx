@@ -7,6 +7,7 @@ import { mealCategoryItems } from "../../app/configs/constants";
 import { useMutation } from "@apollo/client";
 import { ADD_MEAL } from "../../graphql/actions/add.meal.action";
 import toast from "react-hot-toast";
+import { redirect } from "next/navigation";
 const formSchema = z.object({
   name: z.string().min(3).max(50),
   description: z.string().min(10).max(200),
@@ -44,9 +45,9 @@ const AddMeal = () => {
           },
         },
       });
-      console.log("Response: ", response);
-      toast.success("Meal added successfully");
+      toast.success(response.data.addMeal.message);
       reset();
+      redirect("/meals");
     } catch (error: any) {
       console.log(error);
       toast.error(error.message);
