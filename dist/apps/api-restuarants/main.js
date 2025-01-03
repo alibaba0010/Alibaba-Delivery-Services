@@ -928,7 +928,7 @@ let MealsService = class MealsService {
     }
     // add(craete) a meal
     async addMeal(addMealDto, req, response) {
-        console.log("Request: ", req.restaurant);
+        console.log("Request: ", req.restaurant.id);
         const { name, description, price, estimatedPrice, category, images } = addMealDto;
         const restaurantId = req.restaurant.id;
         try {
@@ -971,15 +971,14 @@ let MealsService = class MealsService {
     }
     // get all fodds for the currrent logged in restaurant
     async getCurrentRestaurantMeals(req, response) {
-        console.log("Request: ", req.restaurant);
+        console.log("Request: ", req.restaurant.id);
         const { id: restaurantId } = req.restaurant;
-        const meals = await this.prismaService.meals.findMany({
+        const meal = await this.prismaService.meals.findMany({
             where: { restaurantId },
             include: { images: true, restaurant: true },
             orderBy: { createdAt: "desc" },
         });
-        console.log("Meals:  ", meals);
-        return { meals };
+        return { meal };
     }
 };
 exports.MealsService = MealsService;
