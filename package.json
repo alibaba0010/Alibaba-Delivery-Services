@@ -9,6 +9,8 @@
     "@apollo/gateway": "^2.6.2",
     "@apollo/server": "^4.10.0",
     "@apollo/subgraph": "^2.6.2",
+    "@emotion/react": "^11.14.0",
+    "@emotion/styled": "^11.14.0",
     "@hookform/resolvers": "^3.3.2",
     "@nestjs-modules/mailer": "^1.10.3",
     "@nestjs/apollo": "^12.2.2",

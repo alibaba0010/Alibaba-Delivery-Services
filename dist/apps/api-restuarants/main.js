@@ -979,13 +979,42 @@ let MealsService = class MealsService {
     // get all fodds for the currrent logged in restaurant
     async getCurrentRestaurantMeals(req, response) {
         console.log("Restaurant request: ", req.restaurant);
-        const { id: restaurantId } = req.restaurant;
+        const restaurantId = req.restaurant?.id;
         const meals = await this.prismaService.meals.findMany({
             where: { restaurantId },
             include: { images: true, restaurant: true },
             orderBy: { createdAt: "desc" },
         });
         return { meals };
+    }
+    // get all foods
+    // delete a specific meal
+    async deleteMealById(delemealDto, req) {
+        console.log("Restaurant request: ", req.restaurant);
+        const restaurantId = req.restaurant.id;
+        const { id } = delemealDto;
+        // find meal id from meals db
+        const meal = await this.prismaService.meals.findUnique({
+            where: { id },
+            include: { restaurant: true, images: true },
+        });
+        if (!meal) {
+            return { message: "Meal not found" };
+        }
+        console.log("Meal: ", meal.images);
+        console.log(meal.restaurant.id);
+        if (meal.restaurant.id === restaurantId) {
+            throw new common_1.BadRequestException("Only creator can delete meal");
+        }
+        // delete meal from db
+        await this.prismaService.meals.delete({ where: { id } });
+        // delete images from cloudinary
+        for (const image of meal.images) {
+            console.log("Image: ", image.public_id);
+            await this.cloudinaryService.deleteImage(image.public_id);
+        }
+        // check if meal id === id
+        return { message: "Meal deleted successfully" };
     }
 };
 exports.MealsService = MealsService;
@@ -1014,6 +1043,15 @@ let CloudinaryService = class CloudinaryService {
                 resource_type: "image",
             });
             return result;
+        }
+        catch (error) {
+            throw error;
+        }
+    }
+    async deleteImage(public_id) {
+        try {
+            await cloudinary_1.v2.uploader.destroy(public_id);
+            return { message: "Image deleted successfully" };
         }
         catch (error) {
             throw error;

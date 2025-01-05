@@ -20,4 +20,12 @@ export class CloudinaryService {
       throw error;
     }
   }
+  async deleteImage(public_id: string) {
+    try {
+      await cloudinary.uploader.destroy(public_id);
+      return { message: "Image deleted successfully" };
+    } catch (error) {
+      throw error;
+    }
+  }
 }
