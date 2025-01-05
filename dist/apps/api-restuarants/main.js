@@ -866,7 +866,7 @@ exports.AuthGuard = AuthGuard = tslib_1.__decorate([
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
-var _a, _b, _c;
+var _a, _b, _c, _d, _e;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.MealsResolver = void 0;
 const tslib_1 = __webpack_require__(4);
@@ -887,6 +887,9 @@ let MealsResolver = class MealsResolver {
     async getCurrentRestaurantMeals(context) {
         return await this.mealsService.getCurrentRestaurantMeals(context.req, context.res);
     }
+    async deleteMeal(deleteMealDto, context) {
+        return await this.mealsService.deleteMealById(deleteMealDto, context.req, context.res);
+    }
 };
 exports.MealsResolver = MealsResolver;
 tslib_1.__decorate([
@@ -906,6 +909,15 @@ tslib_1.__decorate([
     tslib_1.__metadata("design:paramtypes", [Object]),
     tslib_1.__metadata("design:returntype", Promise)
 ], MealsResolver.prototype, "getCurrentRestaurantMeals", null);
+tslib_1.__decorate([
+    (0, graphql_1.Mutation)(() => meals_types_1.DeleteMealResponse),
+    (0, common_1.UseGuards)(auth_guard_1.AuthGuard),
+    tslib_1.__param(0, (0, graphql_1.Args)("deleteMealDto")),
+    tslib_1.__param(1, (0, graphql_1.Context)()),
+    tslib_1.__metadata("design:type", Function),
+    tslib_1.__metadata("design:paramtypes", [typeof (_d = typeof meals_dto_1.DeleteMealDto !== "undefined" && meals_dto_1.DeleteMealDto) === "function" ? _d : Object, Object]),
+    tslib_1.__metadata("design:returntype", typeof (_e = typeof Promise !== "undefined" && Promise) === "function" ? _e : Object)
+], MealsResolver.prototype, "deleteMeal", null);
 exports.MealsResolver = MealsResolver = tslib_1.__decorate([
     (0, graphql_1.Resolver)("Meals"),
     tslib_1.__metadata("design:paramtypes", [typeof (_a = typeof meals_service_1.MealsService !== "undefined" && meals_service_1.MealsService) === "function" ? _a : Object])
@@ -989,7 +1001,7 @@ let MealsService = class MealsService {
     }
     // get all foods
     // delete a specific meal
-    async deleteMealById(delemealDto, req) {
+    async deleteMealById(delemealDto, req, res) {
         console.log("Restaurant request: ", req.restaurant);
         const restaurantId = req.restaurant.id;
         const { id } = delemealDto;
@@ -1076,9 +1088,9 @@ module.exports = require("cloudinary");
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
-var _a, _b, _c;
+var _a, _b, _c, _d;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.GetMealResponse = exports.AddMealResponse = void 0;
+exports.DeleteMealResponse = exports.GetMealResponse = exports.AddMealResponse = void 0;
 const tslib_1 = __webpack_require__(4);
 const graphql_1 = __webpack_require__(7);
 const user_type_1 = __webpack_require__(20);
@@ -1112,6 +1124,20 @@ tslib_1.__decorate([
 exports.GetMealResponse = GetMealResponse = tslib_1.__decorate([
     (0, graphql_1.ObjectType)()
 ], GetMealResponse);
+let DeleteMealResponse = class DeleteMealResponse {
+};
+exports.DeleteMealResponse = DeleteMealResponse;
+tslib_1.__decorate([
+    (0, graphql_1.Field)(),
+    tslib_1.__metadata("design:type", String)
+], DeleteMealResponse.prototype, "message", void 0);
+tslib_1.__decorate([
+    (0, graphql_1.Field)(() => user_type_1.ErrorType, { nullable: true }),
+    tslib_1.__metadata("design:type", typeof (_d = typeof user_type_1.ErrorType !== "undefined" && user_type_1.ErrorType) === "function" ? _d : Object)
+], DeleteMealResponse.prototype, "error", void 0);
+exports.DeleteMealResponse = DeleteMealResponse = tslib_1.__decorate([
+    (0, graphql_1.ObjectType)()
+], DeleteMealResponse);
 
 
 /***/ }),

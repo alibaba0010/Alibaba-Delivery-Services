@@ -80,7 +80,7 @@ export class MealsService {
   }
   // get all foods
   // delete a specific meal
-  async deleteMealById(delemealDto: DeleteMealDto, req: any) {
+  async deleteMealById(delemealDto: DeleteMealDto, req: any, res: Response) {
     console.log("Restaurant request: ", req.restaurant);
     const restaurantId = req.restaurant.id;
     const { id } = delemealDto;

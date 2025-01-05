@@ -20,3 +20,12 @@ export class GetMealResponse {
   @Field(() => ErrorType, { nullable: true })
   error?: ErrorType;
 }
+
+@ObjectType()
+export class DeleteMealResponse {
+  @Field()
+  message: string;
+
+  @Field(() => ErrorType, { nullable: true })
+  error?: ErrorType;
+}

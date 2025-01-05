@@ -1,9 +1,13 @@
 import { Args, Context, Mutation, Resolver, Query } from "@nestjs/graphql";
 import { MealsService } from "../services/meals.service";
-import { AddMealResponse, GetMealResponse } from "../types/meals.types";
+import {
+  AddMealResponse,
+  DeleteMealResponse,
+  GetMealResponse,
+} from "../types/meals.types";
 import { UseGuards } from "@nestjs/common";
 import { AuthGuard } from "../guards/auth.guard";
-import { AddMealDto } from "../dto/meals.dto";
+import { AddMealDto, DeleteMealDto } from "../dto/meals.dto";
 import { Request, Response } from "express";
 
 @Resolver("Meals")
@@ -32,5 +36,16 @@ export class MealsResolver {
       context.res
     );
   }
-  // @Mutation(())
+  @Mutation(() => DeleteMealResponse)
+  @UseGuards(AuthGuard)
+  async deleteMeal(
+    @Args("deleteMealDto") deleteMealDto: DeleteMealDto,
+    @Context() context: { req: Request; res: Response }
+  ): Promise<DeleteMealResponse> {
+    return await this.mealsService.deleteMealById(
+      deleteMealDto,
+      context.req,
+      context.res
+    );
+  }
 }
