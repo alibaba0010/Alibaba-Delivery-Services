@@ -11,7 +11,7 @@ import { format } from "timeago.js";
 const Meals = () => {
   const { data, loading } = useQuery(GET_MEALS);
   const meals = data?.getCurrentRestaurantMeals.meals;
-  const getMeals = async () => {};
+  const handleDeleteMeal = async (id: string) => {};
   const columns: GridColDef<MealsDataType>[] = [
     { field: "id", headerName: "ID", flex: 0.3 },
     { field: "name", headerName: "Name", flex: 1 },
@@ -27,7 +27,7 @@ const Meals = () => {
           <div className="md:w-[50%] flex justify-center">
             <span
               className="text-3xl cursor-pointer"
-              // onClick={() => handleDeleteMeal(params.row.id)}
+              onClick={() => handleDeleteMeal(params.row.id)}
             >
               {Icons.delete}
             </span>
