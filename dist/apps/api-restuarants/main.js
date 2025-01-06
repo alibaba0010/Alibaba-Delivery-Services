@@ -1001,10 +1001,10 @@ let MealsService = class MealsService {
     }
     // get all foods
     // delete a specific meal
-    async deleteMealById(delemealDto, req, res) {
+    async deleteMealById(deletemealDto, req, res) {
         console.log("Restaurant request: ", req.restaurant);
         const restaurantId = req.restaurant.id;
-        const { id } = delemealDto;
+        const { id } = deletemealDto;
         // find meal id from meals db
         const meal = await this.prismaService.meals.findUnique({
             where: { id },
@@ -1015,9 +1015,13 @@ let MealsService = class MealsService {
         }
         console.log("Meal: ", meal.images);
         console.log(meal.restaurant.id);
-        if (meal.restaurant.id === restaurantId) {
+        // delete images from images db
+        if (meal.restaurant.id !== restaurantId) {
             throw new common_1.BadRequestException("Only creator can delete meal");
         }
+        await this.prismaService.images.deleteMany({
+            where: { mealId: id },
+        });
         // delete meal from db
         await this.prismaService.meals.delete({ where: { id } });
         // delete images from cloudinary

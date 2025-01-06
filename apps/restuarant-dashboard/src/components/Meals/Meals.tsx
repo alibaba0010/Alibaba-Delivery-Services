@@ -4,14 +4,30 @@ import React from "react";
 import { Icons } from "../../utils/Icon";
 import { Box } from "@mui/material";
 import { GET_MEALS } from "../../graphql/actions/get.meal.action";
-import { useQuery } from "@apollo/client";
+import { useMutation, useQuery } from "@apollo/client";
 import Loader from "../layout/Loader";
 import { format } from "timeago.js";
+import { DELETE_MEAL } from "../../graphql/actions/delete.meal";
+import toast from "react-hot-toast";
 
 const Meals = () => {
-  const { data, loading } = useQuery(GET_MEALS);
+  const { data, loading, refetch } = useQuery(GET_MEALS);
+  const [deleteFood] = useMutation(DELETE_MEAL);
   const meals = data?.getCurrentRestaurantMeals.meals;
-  const handleDeleteMeal = async (id: string) => {};
+  const handleDeleteMeal = async (id: string) => {
+    try {
+      const response = await deleteFood({
+        variables: { delemealDto: { id } },
+        refetchQueries: [{ query: GET_MEALS }],
+      });
+      console.log("response: ", response);
+      toast.success(response.data.deleteMeal.message);
+      refetch();
+    } catch (error: any) {
+      console.log("error: ", error);
+      toast.error(error.message);
+    }
+  };
   const columns: GridColDef<MealsDataType>[] = [
     { field: "id", headerName: "ID", flex: 0.3 },
     { field: "name", headerName: "Name", flex: 1 },
