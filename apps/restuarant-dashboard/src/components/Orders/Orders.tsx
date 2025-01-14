@@ -2,6 +2,7 @@
 import React from "react";
 import { Box } from "@mui/material";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
+import { orders } from "../../app/configs/orders";
 
 const Orders = ({ isDashboard }: { isDashboard?: boolean }) => {
   const columns: GridColDef[] = [
@@ -16,7 +17,7 @@ const Orders = ({ isDashboard }: { isDashboard?: boolean }) => {
     { field: "price", headerName: "Price", flex: 0.5 },
     { field: "createdAt", headerName: "Created At", flex: 0.5 },
   ];
-
+// orders
   const rows: OrdersDataType[] = Array.from({ length: 10 }, (_, index) => ({
     id: `order-${index + 1}`,
     name: "shahriar sajeeb",
@@ -25,6 +26,14 @@ const Orders = ({ isDashboard }: { isDashboard?: boolean }) => {
     price: "12$",
     createdAt: "2days ago",
   }));
+  // const rows: OrdersDataType[] = Array.from({ length: 10 }, (_, index) => ({
+  //   id: `order-${index + 1}`,
+  //   name: "shahriar sajeeb",
+  //   email: "support@alibaba.com",
+  //   title: "Juicy chicken burger",
+  //   price: "12$",
+  //   createdAt: "2days ago",
+  // }));
 
   return (
     <Box>

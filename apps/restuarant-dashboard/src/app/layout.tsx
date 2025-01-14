@@ -25,7 +25,6 @@ export default function RootLayout({
 }) {
   const header = headers();
   const pathName = header.get("next-url");
-  console.log("Pathname...........", pathName);
   return (
     <html lang="en">
       <body className={`${poppins.variable} ${inter.variable}`}>

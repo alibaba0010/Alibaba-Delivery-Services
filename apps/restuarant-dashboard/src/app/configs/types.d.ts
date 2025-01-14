@@ -42,6 +42,11 @@ type MealsDataType = {
   totalOrders: number;
   createdAt: Date | string;
 };
-type OrdersDataType = {
-  
+type OrdersType = {
+  id: string;
+  user_id: string;
+  meal_id: string;
+  quantity: number;
+  amount: number;
+  total_amount: number;
 }
