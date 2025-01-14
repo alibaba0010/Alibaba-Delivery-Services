@@ -42,3 +42,6 @@ type MealsDataType = {
   totalOrders: number;
   createdAt: Date | string;
 };
+type OrdersDataType = {
+  
+}
