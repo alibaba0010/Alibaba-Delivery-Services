@@ -45,10 +45,10 @@ export class Orders {
   id: string;
 
   @Field()
-  user_id: string;
+  userId: string;
 
   @Field()
-  meal_id: string;
+  mealId: string;
 
   @Field()
   quantity: number;
@@ -57,5 +57,10 @@ export class Orders {
   amount: number;
 
   @Field()
-  total_amount: number;
+  totalAmount: number;
+
+  @Field()
+  createdAt?: Date;
+  @Field()
+  updatedAt?: Date;
 }

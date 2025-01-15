@@ -1,5 +1,11 @@
 import { Field, InputType } from "@nestjs/graphql";
-import { ArrayNotEmpty, IsArray, IsNotEmpty, IsString } from "class-validator";
+import {
+  ArrayNotEmpty,
+  IsArray,
+  IsNotEmpty,
+  IsNumber,
+  IsString,
+} from "class-validator";
 
 @InputType()
 export class AddMealDto {
@@ -38,4 +44,17 @@ export class DeleteMealDto {
   @IsNotEmpty({ message: "Meal id is required." })
   @IsString({ message: "Meal id must need to be one string." })
   id: string;
+}
+
+@InputType()
+export class GetOrdersDto {
+  @Field()
+  @IsNumber({}, { message: "Page must be a number." })
+  @IsNotEmpty({ message: "Page is required." })
+  page: number;
+
+  @Field()
+  @IsNumber({}, { message: "PageSize must be a number." })
+  @IsNotEmpty({ message: "PageSize is required." })
+  pageSize: number;
 }

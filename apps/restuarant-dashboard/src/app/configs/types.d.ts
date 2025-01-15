@@ -43,10 +43,13 @@ type MealsDataType = {
   createdAt: Date | string;
 };
 type OrdersType = {
-  id: string;
-  user_id: string;
-  meal_id: string;
+  // id: string;
+  userId: string;
+  mealId: string;
+  restaurantId: string;
   quantity: number;
   amount: number;
-  total_amount: number;
-}
+  totalAmount: number;
+  createdAt?: Date | string;
+  updatedAt?: Date | string;
+};

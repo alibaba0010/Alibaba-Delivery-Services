@@ -1150,6 +1150,18 @@ tslib_1.__decorate([
     tslib_1.__metadata("design:type", typeof (_e = typeof meals_entities_1.Orders !== "undefined" && meals_entities_1.Orders) === "function" ? _e : Object)
 ], GetOrdersRespnse.prototype, "orders", void 0);
 tslib_1.__decorate([
+    (0, graphql_1.Field)(() => Number, { nullable: true }),
+    tslib_1.__metadata("design:type", Number)
+], GetOrdersRespnse.prototype, "totalOrders", void 0);
+tslib_1.__decorate([
+    (0, graphql_1.Field)(() => Number, { nullable: true }),
+    tslib_1.__metadata("design:type", Number)
+], GetOrdersRespnse.prototype, "totalPages", void 0);
+tslib_1.__decorate([
+    (0, graphql_1.Field)(() => Number, { nullable: true }),
+    tslib_1.__metadata("design:type", Number)
+], GetOrdersRespnse.prototype, "currentPage", void 0);
+tslib_1.__decorate([
     (0, graphql_1.Field)(() => user_type_1.ErrorType, { nullable: true }),
     tslib_1.__metadata("design:type", typeof (_f = typeof user_type_1.ErrorType !== "undefined" && user_type_1.ErrorType) === "function" ? _f : Object)
 ], GetOrdersRespnse.prototype, "error", void 0);
@@ -1163,7 +1175,7 @@ exports.GetOrdersRespnse = GetOrdersRespnse = tslib_1.__decorate([
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
-var _a, _b;
+var _a, _b, _c, _d;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.Orders = exports.Meal = exports.Images = void 0;
 const tslib_1 = __webpack_require__(4);
@@ -1238,11 +1250,11 @@ tslib_1.__decorate([
 tslib_1.__decorate([
     (0, graphql_1.Field)(),
     tslib_1.__metadata("design:type", String)
-], Orders.prototype, "user_id", void 0);
+], Orders.prototype, "userId", void 0);
 tslib_1.__decorate([
     (0, graphql_1.Field)(),
     tslib_1.__metadata("design:type", String)
-], Orders.prototype, "meal_id", void 0);
+], Orders.prototype, "mealId", void 0);
 tslib_1.__decorate([
     (0, graphql_1.Field)(),
     tslib_1.__metadata("design:type", Number)
@@ -1254,7 +1266,15 @@ tslib_1.__decorate([
 tslib_1.__decorate([
     (0, graphql_1.Field)(),
     tslib_1.__metadata("design:type", Number)
-], Orders.prototype, "total_amount", void 0);
+], Orders.prototype, "totalAmount", void 0);
+tslib_1.__decorate([
+    (0, graphql_1.Field)(),
+    tslib_1.__metadata("design:type", typeof (_c = typeof Date !== "undefined" && Date) === "function" ? _c : Object)
+], Orders.prototype, "createdAt", void 0);
+tslib_1.__decorate([
+    (0, graphql_1.Field)(),
+    tslib_1.__metadata("design:type", typeof (_d = typeof Date !== "undefined" && Date) === "function" ? _d : Object)
+], Orders.prototype, "updatedAt", void 0);
 exports.Orders = Orders = tslib_1.__decorate([
     (0, graphql_1.ObjectType)()
 ], Orders);
@@ -1266,7 +1286,7 @@ exports.Orders = Orders = tslib_1.__decorate([
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.DeleteMealDto = exports.AddMealDto = void 0;
+exports.GetOrdersDto = exports.DeleteMealDto = exports.AddMealDto = void 0;
 const tslib_1 = __webpack_require__(4);
 const graphql_1 = __webpack_require__(7);
 const class_validator_1 = __webpack_require__(23);
@@ -1322,6 +1342,24 @@ tslib_1.__decorate([
 exports.DeleteMealDto = DeleteMealDto = tslib_1.__decorate([
     (0, graphql_1.InputType)()
 ], DeleteMealDto);
+let GetOrdersDto = class GetOrdersDto {
+};
+exports.GetOrdersDto = GetOrdersDto;
+tslib_1.__decorate([
+    (0, graphql_1.Field)(),
+    (0, class_validator_1.IsNumber)({}, { message: "Page must be a number." }),
+    (0, class_validator_1.IsNotEmpty)({ message: "Page is required." }),
+    tslib_1.__metadata("design:type", Number)
+], GetOrdersDto.prototype, "page", void 0);
+tslib_1.__decorate([
+    (0, graphql_1.Field)(),
+    (0, class_validator_1.IsNumber)({}, { message: "PageSize must be a number." }),
+    (0, class_validator_1.IsNotEmpty)({ message: "PageSize is required." }),
+    tslib_1.__metadata("design:type", Number)
+], GetOrdersDto.prototype, "pageSize", void 0);
+exports.GetOrdersDto = GetOrdersDto = tslib_1.__decorate([
+    (0, graphql_1.InputType)()
+], GetOrdersDto);
 
 
 /***/ }),
@@ -1388,25 +1426,32 @@ let OrdersService = class OrdersService {
         this.cloudinaryService = cloudinaryService;
     }
     // get all orders using pagination query
-    async getOrders(req, response) {
-        const page = 1;
-        const pageSize = 10;
+    async getOrders(getOrderDto, req, response) {
+        const { page, pageSize } = getOrderDto;
+        console.log(`Page: ${page}, PageSize: ${pageSize}`);
+        if (page <= 0 || pageSize <= 0) {
+            throw new common_1.BadRequestException("Page and pageSize must be positive integers");
+        }
         const skip = (page - 1) * pageSize;
-        const take = pageSize;
-        const posts = await this.prismaService.orders.findMany({
-            skip: skip,
-            take: take,
-            orderBy: {
-                createdAt: "desc", // or any other field you want to order by
-            },
-        });
-        const totalPosts = await this.prismaService.orders.count();
-        return {
-            posts,
-            totalPosts,
-            totalPages: Math.ceil(totalPosts / pageSize),
-            currentPage: page,
-        };
+        try {
+            const orders = await this.prismaService.orders.findMany({
+                skip: skip,
+                take: pageSize,
+                orderBy: {
+                    createdAt: "desc", // or any other field you want to order by
+                },
+            });
+            const totalOrders = await this.prismaService.orders.count();
+            return {
+                orders,
+                totalOrders,
+                totalPages: Math.ceil(totalOrders / pageSize),
+                currentPage: page,
+            };
+        }
+        catch (error) {
+            throw new common_1.BadRequestException(error.message);
+        }
     }
 };
 exports.OrdersService = OrdersService;
@@ -1421,27 +1466,29 @@ exports.OrdersService = OrdersService = tslib_1.__decorate([
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
-var _a;
+var _a, _b;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.OrdersResolver = void 0;
 const tslib_1 = __webpack_require__(4);
 const graphql_1 = __webpack_require__(7);
 const orders_service_1 = __webpack_require__(34);
 const meals_types_1 = __webpack_require__(29);
+const meals_dto_1 = __webpack_require__(31);
 let OrdersResolver = class OrdersResolver {
     constructor(orderService) {
         this.orderService = orderService;
     }
-    async getOrders(ctx) {
-        return await this.orderService.getOrders(ctx.req, ctx.res);
+    async getOrders(getOrdersDto, ctx) {
+        return await this.orderService.getOrders(getOrdersDto, ctx.req, ctx.res);
     }
 };
 exports.OrdersResolver = OrdersResolver;
 tslib_1.__decorate([
     (0, graphql_1.Query)(() => meals_types_1.GetOrdersRespnse),
-    tslib_1.__param(0, (0, graphql_1.Context)()),
+    tslib_1.__param(0, (0, graphql_1.Args)("getOrdersDto")),
+    tslib_1.__param(1, (0, graphql_1.Context)()),
     tslib_1.__metadata("design:type", Function),
-    tslib_1.__metadata("design:paramtypes", [Object]),
+    tslib_1.__metadata("design:paramtypes", [typeof (_b = typeof meals_dto_1.GetOrdersDto !== "undefined" && meals_dto_1.GetOrdersDto) === "function" ? _b : Object, Object]),
     tslib_1.__metadata("design:returntype", Promise)
 ], OrdersResolver.prototype, "getOrders", null);
 exports.OrdersResolver = OrdersResolver = tslib_1.__decorate([

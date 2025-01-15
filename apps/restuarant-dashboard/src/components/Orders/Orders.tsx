@@ -3,23 +3,33 @@ import React, { useState } from "react";
 import { Box } from "@mui/material";
 import { DataGrid, GridColDef, GridPaginationModel } from "@mui/x-data-grid";
 import { orders } from "../../app/configs/orders";
+import { useQuery } from "@apollo/client";
+import { GET_ORDERS } from "../../graphql/actions/get.orders.action";
 
 const Orders = ({ isDashboard }: { isDashboard?: boolean }) => {
   const [paginationModel, setPaginationModel] = useState<GridPaginationModel>({
     page: 0,
     pageSize: 10,
   });
-
+  const { data, loading, refetch } = useQuery(GET_ORDERS, {
+    variables: {
+      page: paginationModel.page + 1,
+      pageSize: paginationModel.pageSize,
+    },
+  });
+  console.log(`Pagination Model: `, paginationModel);
+  console.log("Data: ", data);
   const columns: GridColDef[] = [
     {
       field: "id",
       headerName: "ID",
       flex: 0.3,
     },
-    { field: "user_id", headerName: "User Id", flex: isDashboard ? 0.8 : 0.5 },
+    // { field: "userId", headerName: "User Id", flex: isDashboard ? 0.8 : 0.5 },
     ...(isDashboard
       ? []
-      : [{ field: "meal_id", headerName: "Meal Id", flex: 1 }]),
+      : [{ field: "mealId", headerName: "Meal Id", flex: 1 }]),
+    { field: "restaurantId", headerName: "restaurant Id", flex: 0.8 },
     { field: "quantity", headerName: "quantity", flex: 0.8 },
     { field: "amount", headerName: "Amount", flex: 0.5 },
     { field: "total_amount", headerName: "Total Amount", flex: 0.5 },
@@ -29,23 +39,16 @@ const Orders = ({ isDashboard }: { isDashboard?: boolean }) => {
   const rows: OrdersType[] = [];
   orders.map((i: OrdersType) => {
     rows.push({
-      id: i.id,
-      user_id: i.user_id,
-      meal_id: i.meal_id ? i.meal_id : "-",
+      // id: i.id,
+      id: i.userId,
+      mealId: i.mealId,
+      restaurantId: i.restaurantId,
       quantity: i.quantity,
       amount: i.amount,
-      total_amount: i.total_amount,
+      totalAmount: i.totalAmount,
       // createdAt: format(new Date(i.createdAt), "MMM Do, YYYY"),
     });
   });
-  // const rows: OrdersDataType[] = Array.from({ length: 10 }, (_, index) => ({
-  //   id: `order-${index + 1}`,
-  //   name: "shahriar sajeeb",
-  //   email: "support@alibaba.com",
-  //   title: "Juicy chicken burger",
-  //   price: "12$",
-  //   createdAt: "2days ago",
-  // }));
 
   return (
     <Box>
@@ -104,7 +107,7 @@ const Orders = ({ isDashboard }: { isDashboard?: boolean }) => {
           columns={columns}
           paginationModel={paginationModel}
           onPaginationModelChange={setPaginationModel}
-          pageSizeOptions={[5, 10, 15]}
+          pageSizeOptions={[5, 10, 15, 20]}
         />
       </Box>
     </Box>

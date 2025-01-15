@@ -94,7 +94,7 @@ model Orders{
   restaurantId String @db.ObjectId
   quantity     Int
   amount     Int
-  total        Int
+  totalAmount        Int
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
 }

@@ -34,6 +34,13 @@ export class GetOrdersRespnse {
   @Field(() => [Orders], { nullable: true })
   orders?: Orders;
 
+  @Field(() => Number, { nullable: true })
+  totalOrders?: number;
+  @Field(() => Number, { nullable: true })
+  totalPages?: number;
+  @Field(() => Number, { nullable: true })
+  currentPage?: number;
+
   @Field(() => ErrorType, { nullable: true })
   error?: ErrorType;
 }
