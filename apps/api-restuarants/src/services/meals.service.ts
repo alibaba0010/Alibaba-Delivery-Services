@@ -1,7 +1,5 @@
-import { ConfigService } from "@nestjs/config";
 import { PrismaService } from "../../prisma/prisma.service";
 import { BadRequestException, Injectable } from "@nestjs/common";
-import { EmailService } from "../email/email.service";
 import { AddMealDto, DeleteMealDto } from "../dto/meals.dto";
 import { CloudinaryService } from "../cloudinary/cloudinary.service";
 import { Response } from "express";
@@ -15,8 +13,6 @@ type Images = {
 export class MealsService {
   constructor(
     private readonly prismaService: PrismaService,
-    private readonly configService: ConfigService,
-    private readonly emailService: EmailService,
     private readonly cloudinaryService: CloudinaryService
   ) {}
   // add(craete) a meal

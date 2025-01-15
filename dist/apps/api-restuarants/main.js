@@ -35,6 +35,8 @@ const meals_service_1 = __webpack_require__(26);
 const email_service_1 = __webpack_require__(13);
 const cloudinary_module_1 = __webpack_require__(32);
 const cloudinary_service_1 = __webpack_require__(27);
+const orders_service_1 = __webpack_require__(34);
+const orders_resolver_1 = __webpack_require__(35);
 let restaurantModule = class restaurantModule {
 };
 exports.restaurantModule = restaurantModule;
@@ -64,6 +66,8 @@ exports.restaurantModule = restaurantModule = tslib_1.__decorate([
             meals_service_1.MealsService,
             email_service_1.EmailService,
             cloudinary_service_1.CloudinaryService,
+            orders_service_1.OrdersService,
+            orders_resolver_1.OrdersResolver,
         ],
     })
 ], restaurantModule);
@@ -929,20 +933,16 @@ exports.MealsResolver = MealsResolver = tslib_1.__decorate([
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
-var _a, _b, _c, _d;
+var _a, _b;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.MealsService = void 0;
 const tslib_1 = __webpack_require__(4);
-const config_1 = __webpack_require__(6);
 const prisma_service_1 = __webpack_require__(10);
 const common_1 = __webpack_require__(5);
-const email_service_1 = __webpack_require__(13);
 const cloudinary_service_1 = __webpack_require__(27);
 let MealsService = class MealsService {
-    constructor(prismaService, configService, emailService, cloudinaryService) {
+    constructor(prismaService, cloudinaryService) {
         this.prismaService = prismaService;
-        this.configService = configService;
-        this.emailService = emailService;
         this.cloudinaryService = cloudinaryService;
     }
     // add(craete) a meal
@@ -1036,7 +1036,7 @@ let MealsService = class MealsService {
 exports.MealsService = MealsService;
 exports.MealsService = MealsService = tslib_1.__decorate([
     (0, common_1.Injectable)(),
-    tslib_1.__metadata("design:paramtypes", [typeof (_a = typeof prisma_service_1.PrismaService !== "undefined" && prisma_service_1.PrismaService) === "function" ? _a : Object, typeof (_b = typeof config_1.ConfigService !== "undefined" && config_1.ConfigService) === "function" ? _b : Object, typeof (_c = typeof email_service_1.EmailService !== "undefined" && email_service_1.EmailService) === "function" ? _c : Object, typeof (_d = typeof cloudinary_service_1.CloudinaryService !== "undefined" && cloudinary_service_1.CloudinaryService) === "function" ? _d : Object])
+    tslib_1.__metadata("design:paramtypes", [typeof (_a = typeof prisma_service_1.PrismaService !== "undefined" && prisma_service_1.PrismaService) === "function" ? _a : Object, typeof (_b = typeof cloudinary_service_1.CloudinaryService !== "undefined" && cloudinary_service_1.CloudinaryService) === "function" ? _b : Object])
 ], MealsService);
 
 
@@ -1092,9 +1092,9 @@ module.exports = require("cloudinary");
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
-var _a, _b, _c, _d;
+var _a, _b, _c, _d, _e, _f;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.DeleteMealResponse = exports.GetMealResponse = exports.AddMealResponse = void 0;
+exports.GetOrdersRespnse = exports.DeleteMealResponse = exports.GetMealResponse = exports.AddMealResponse = void 0;
 const tslib_1 = __webpack_require__(4);
 const graphql_1 = __webpack_require__(7);
 const user_type_1 = __webpack_require__(20);
@@ -1142,6 +1142,20 @@ tslib_1.__decorate([
 exports.DeleteMealResponse = DeleteMealResponse = tslib_1.__decorate([
     (0, graphql_1.ObjectType)()
 ], DeleteMealResponse);
+let GetOrdersRespnse = class GetOrdersRespnse {
+};
+exports.GetOrdersRespnse = GetOrdersRespnse;
+tslib_1.__decorate([
+    (0, graphql_1.Field)(() => [meals_entities_1.Orders], { nullable: true }),
+    tslib_1.__metadata("design:type", typeof (_e = typeof meals_entities_1.Orders !== "undefined" && meals_entities_1.Orders) === "function" ? _e : Object)
+], GetOrdersRespnse.prototype, "orders", void 0);
+tslib_1.__decorate([
+    (0, graphql_1.Field)(() => user_type_1.ErrorType, { nullable: true }),
+    tslib_1.__metadata("design:type", typeof (_f = typeof user_type_1.ErrorType !== "undefined" && user_type_1.ErrorType) === "function" ? _f : Object)
+], GetOrdersRespnse.prototype, "error", void 0);
+exports.GetOrdersRespnse = GetOrdersRespnse = tslib_1.__decorate([
+    (0, graphql_1.ObjectType)()
+], GetOrdersRespnse);
 
 
 /***/ }),
@@ -1151,7 +1165,7 @@ exports.DeleteMealResponse = DeleteMealResponse = tslib_1.__decorate([
 
 var _a, _b;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.Meal = exports.Images = void 0;
+exports.Orders = exports.Meal = exports.Images = void 0;
 const tslib_1 = __webpack_require__(4);
 const graphql_1 = __webpack_require__(7);
 let Images = class Images {
@@ -1214,6 +1228,36 @@ tslib_1.__decorate([
 exports.Meal = Meal = tslib_1.__decorate([
     (0, graphql_1.ObjectType)()
 ], Meal);
+let Orders = class Orders {
+};
+exports.Orders = Orders;
+tslib_1.__decorate([
+    (0, graphql_1.Field)(),
+    tslib_1.__metadata("design:type", String)
+], Orders.prototype, "id", void 0);
+tslib_1.__decorate([
+    (0, graphql_1.Field)(),
+    tslib_1.__metadata("design:type", String)
+], Orders.prototype, "user_id", void 0);
+tslib_1.__decorate([
+    (0, graphql_1.Field)(),
+    tslib_1.__metadata("design:type", String)
+], Orders.prototype, "meal_id", void 0);
+tslib_1.__decorate([
+    (0, graphql_1.Field)(),
+    tslib_1.__metadata("design:type", Number)
+], Orders.prototype, "quantity", void 0);
+tslib_1.__decorate([
+    (0, graphql_1.Field)(),
+    tslib_1.__metadata("design:type", Number)
+], Orders.prototype, "amount", void 0);
+tslib_1.__decorate([
+    (0, graphql_1.Field)(),
+    tslib_1.__metadata("design:type", Number)
+], Orders.prototype, "total_amount", void 0);
+exports.Orders = Orders = tslib_1.__decorate([
+    (0, graphql_1.ObjectType)()
+], Orders);
 
 
 /***/ }),
@@ -1324,6 +1368,90 @@ exports.Cloudinary = Cloudinary;
 
 /***/ }),
 /* 34 */
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+
+var _a, _b, _c, _d;
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.OrdersService = void 0;
+const tslib_1 = __webpack_require__(4);
+const common_1 = __webpack_require__(5);
+const prisma_service_1 = __webpack_require__(10);
+const config_1 = __webpack_require__(6);
+const email_service_1 = __webpack_require__(13);
+const cloudinary_service_1 = __webpack_require__(27);
+let OrdersService = class OrdersService {
+    constructor(prismaService, configService, emailService, cloudinaryService) {
+        this.prismaService = prismaService;
+        this.configService = configService;
+        this.emailService = emailService;
+        this.cloudinaryService = cloudinaryService;
+    }
+    // get all orders using pagination query
+    async getOrders(req, response) {
+        const page = 1;
+        const pageSize = 10;
+        const skip = (page - 1) * pageSize;
+        const take = pageSize;
+        const posts = await this.prismaService.orders.findMany({
+            skip: skip,
+            take: take,
+            orderBy: {
+                createdAt: "desc", // or any other field you want to order by
+            },
+        });
+        const totalPosts = await this.prismaService.orders.count();
+        return {
+            posts,
+            totalPosts,
+            totalPages: Math.ceil(totalPosts / pageSize),
+            currentPage: page,
+        };
+    }
+};
+exports.OrdersService = OrdersService;
+exports.OrdersService = OrdersService = tslib_1.__decorate([
+    (0, common_1.Injectable)(),
+    tslib_1.__metadata("design:paramtypes", [typeof (_a = typeof prisma_service_1.PrismaService !== "undefined" && prisma_service_1.PrismaService) === "function" ? _a : Object, typeof (_b = typeof config_1.ConfigService !== "undefined" && config_1.ConfigService) === "function" ? _b : Object, typeof (_c = typeof email_service_1.EmailService !== "undefined" && email_service_1.EmailService) === "function" ? _c : Object, typeof (_d = typeof cloudinary_service_1.CloudinaryService !== "undefined" && cloudinary_service_1.CloudinaryService) === "function" ? _d : Object])
+], OrdersService);
+
+
+/***/ }),
+/* 35 */
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+
+var _a;
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.OrdersResolver = void 0;
+const tslib_1 = __webpack_require__(4);
+const graphql_1 = __webpack_require__(7);
+const orders_service_1 = __webpack_require__(34);
+const meals_types_1 = __webpack_require__(29);
+let OrdersResolver = class OrdersResolver {
+    constructor(orderService) {
+        this.orderService = orderService;
+    }
+    async getOrders(ctx) {
+        return await this.orderService.getOrders(ctx.req, ctx.res);
+    }
+};
+exports.OrdersResolver = OrdersResolver;
+tslib_1.__decorate([
+    (0, graphql_1.Query)(() => meals_types_1.GetOrdersRespnse),
+    tslib_1.__param(0, (0, graphql_1.Context)()),
+    tslib_1.__metadata("design:type", Function),
+    tslib_1.__metadata("design:paramtypes", [Object]),
+    tslib_1.__metadata("design:returntype", Promise)
+], OrdersResolver.prototype, "getOrders", null);
+exports.OrdersResolver = OrdersResolver = tslib_1.__decorate([
+    (0, graphql_1.Resolver)("Orders"),
+    tslib_1.__metadata("design:paramtypes", [typeof (_a = typeof orders_service_1.OrdersService !== "undefined" && orders_service_1.OrdersService) === "function" ? _a : Object])
+], OrdersResolver);
+
+
+/***/ }),
+/* 36 */
 /***/ ((module) => {
 
 module.exports = require("express");
@@ -1365,7 +1493,7 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 const core_1 = __webpack_require__(1);
 const path_1 = __webpack_require__(2);
 const restaurant_module_1 = __webpack_require__(3);
-const express_1 = __webpack_require__(34);
+const express_1 = __webpack_require__(36);
 async function bootstrap() {
     const app = await core_1.NestFactory.create(restaurant_module_1.restaurantModule);
     app.use((0, express_1.json)({ limit: "15mb" }));

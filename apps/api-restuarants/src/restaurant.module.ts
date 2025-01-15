@@ -15,6 +15,8 @@ import { MealsService } from "./services/meals.service";
 import { EmailService } from "./email/email.service";
 import { CloudinaryModule } from "./cloudinary/cloudinary.module";
 import { CloudinaryService } from "./cloudinary/cloudinary.service";
+import { OrdersService } from "./services/orders.service";
+import { OrdersResolver } from "./resolvers/orders.resolver";
 
 @Module({
   imports: [
@@ -41,6 +43,8 @@ import { CloudinaryService } from "./cloudinary/cloudinary.service";
     MealsService,
     EmailService,
     CloudinaryService,
+    OrdersService,
+    OrdersResolver,
   ],
 })
 export class restaurantModule {}

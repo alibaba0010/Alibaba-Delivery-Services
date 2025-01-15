@@ -39,3 +39,23 @@ export class Meal {
   @Field()
   updatedAt?: Date;
 }
+@ObjectType()
+export class Orders {
+  @Field()
+  id: string;
+
+  @Field()
+  user_id: string;
+
+  @Field()
+  meal_id: string;
+
+  @Field()
+  quantity: number;
+
+  @Field()
+  amount: number;
+
+  @Field()
+  total_amount: number;
+}
