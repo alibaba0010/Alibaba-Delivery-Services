@@ -54,6 +54,15 @@ const Orders = ({ isDashboard }: { isDashboard?: boolean }) => {
       });
     });
   }
+  const handlePaginationModelChange = (
+    newPaginationModel: GridPaginationModel
+  ) => {
+    setPaginationModel(newPaginationModel);
+    refetch({
+      page: newPaginationModel.page + 1,
+      pageSize: newPaginationModel.pageSize,
+    });
+  };
   return (
     <Box>
       <Box
@@ -113,7 +122,7 @@ const Orders = ({ isDashboard }: { isDashboard?: boolean }) => {
             rows={rows}
             columns={columns}
             paginationModel={paginationModel}
-            onPaginationModelChange={setPaginationModel}
+            onPaginationModelChange={handlePaginationModelChange}
             pageSizeOptions={[5, 10, 15, 20]}
           />
         )}
