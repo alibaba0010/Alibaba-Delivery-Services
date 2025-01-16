@@ -2,9 +2,9 @@
 import React, { useState } from "react";
 import { Box } from "@mui/material";
 import { DataGrid, GridColDef, GridPaginationModel } from "@mui/x-data-grid";
-import { orders } from "../../app/configs/orders";
 import { useQuery } from "@apollo/client";
 import { GET_ORDERS } from "../../graphql/actions/get.orders.action";
+import Loader from "../layout/Loader";
 
 const Orders = ({ isDashboard }: { isDashboard?: boolean }) => {
   const [paginationModel, setPaginationModel] = useState<GridPaginationModel>({
@@ -13,12 +13,14 @@ const Orders = ({ isDashboard }: { isDashboard?: boolean }) => {
   });
   const { data, loading, refetch } = useQuery(GET_ORDERS, {
     variables: {
-      page: paginationModel.page + 1,
-      pageSize: paginationModel.pageSize,
+      getOrdersDto: {
+        page: paginationModel.page + 1,
+        pageSize: paginationModel.pageSize,
+      },
     },
   });
   console.log(`Pagination Model: `, paginationModel);
-  console.log("Data: ", data);
+  console.log("Data: ", data?.getOrders);
   const columns: GridColDef[] = [
     {
       field: "id",
@@ -29,27 +31,29 @@ const Orders = ({ isDashboard }: { isDashboard?: boolean }) => {
     ...(isDashboard
       ? []
       : [{ field: "mealId", headerName: "Meal Id", flex: 1 }]),
-    { field: "restaurantId", headerName: "restaurant Id", flex: 0.8 },
+    { field: "restaurantId", headerName: "Restaurant Id", flex: 0.8 },
     { field: "quantity", headerName: "quantity", flex: 0.8 },
     { field: "amount", headerName: "Amount", flex: 0.5 },
-    { field: "total_amount", headerName: "Total Amount", flex: 0.5 },
+    { field: "totalAmount", headerName: "Total Amount", flex: 0.5 },
     // { field: "createdAt", headerName: "Created At", flex: 0.5 },
   ];
   // orders
   const rows: OrdersType[] = [];
-  orders.map((i: OrdersType) => {
-    rows.push({
-      // id: i.id,
-      id: i.userId,
-      mealId: i.mealId,
-      restaurantId: i.restaurantId,
-      quantity: i.quantity,
-      amount: i.amount,
-      totalAmount: i.totalAmount,
-      // createdAt: format(new Date(i.createdAt), "MMM Do, YYYY"),
+  if (data) {
+    const { orders } = data?.getOrders;
+    orders.map((i: OrdersType) => {
+      rows.push({
+        id: i.id,
+        userId: i.userId,
+        mealId: i.mealId,
+        restaurantId: i.restaurantId,
+        quantity: i.quantity,
+        amount: i.amount,
+        totalAmount: i.totalAmount,
+        // createdAt: format(new Date(i.createdAt), "MMM Do, YYYY"),
+      });
     });
-  });
-
+  }
   return (
     <Box>
       <Box
@@ -101,14 +105,18 @@ const Orders = ({ isDashboard }: { isDashboard?: boolean }) => {
           },
         }}
       >
-        <DataGrid
-          checkboxSelection={!isDashboard}
-          rows={rows}
-          columns={columns}
-          paginationModel={paginationModel}
-          onPaginationModelChange={setPaginationModel}
-          pageSizeOptions={[5, 10, 15, 20]}
-        />
+        {loading ? (
+          <Loader />
+        ) : (
+          <DataGrid
+            checkboxSelection={!isDashboard}
+            rows={rows}
+            columns={columns}
+            paginationModel={paginationModel}
+            onPaginationModelChange={setPaginationModel}
+            pageSizeOptions={[5, 10, 15, 20]}
+          />
+        )}
       </Box>
     </Box>
   );

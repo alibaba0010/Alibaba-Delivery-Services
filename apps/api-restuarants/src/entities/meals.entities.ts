@@ -49,6 +49,8 @@ export class Orders {
 
   @Field()
   mealId: string;
+  @Field()
+  restaurantId: string;
 
   @Field()
   quantity: number;

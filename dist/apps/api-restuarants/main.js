@@ -1257,6 +1257,10 @@ tslib_1.__decorate([
 ], Orders.prototype, "mealId", void 0);
 tslib_1.__decorate([
     (0, graphql_1.Field)(),
+    tslib_1.__metadata("design:type", String)
+], Orders.prototype, "restaurantId", void 0);
+tslib_1.__decorate([
+    (0, graphql_1.Field)(),
     tslib_1.__metadata("design:type", Number)
 ], Orders.prototype, "quantity", void 0);
 tslib_1.__decorate([
@@ -1426,8 +1430,8 @@ let OrdersService = class OrdersService {
         this.cloudinaryService = cloudinaryService;
     }
     // get all orders using pagination query
-    async getOrders(getOrderDto, req, response) {
-        const { page, pageSize } = getOrderDto;
+    async getOrders(getOrdersDto, req, response) {
+        const { page, pageSize } = getOrdersDto;
         console.log(`Page: ${page}, PageSize: ${pageSize}`);
         if (page <= 0 || pageSize <= 0) {
             throw new common_1.BadRequestException("Page and pageSize must be positive integers");

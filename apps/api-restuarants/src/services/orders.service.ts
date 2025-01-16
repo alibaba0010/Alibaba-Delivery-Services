@@ -15,8 +15,8 @@ export class OrdersService {
     private readonly cloudinaryService: CloudinaryService
   ) {}
   // get all orders using pagination query
-  async getOrders(getOrderDto: GetOrdersDto, req: any, response: Response) {
-    const { page, pageSize } = getOrderDto;
+  async getOrders(getOrdersDto: GetOrdersDto, req: any, response: Response) {
+    const { page, pageSize } = getOrdersDto;
     console.log(`Page: ${page}, PageSize: ${pageSize}`);
     if (page <= 0 || pageSize <= 0) {
       throw new BadRequestException(

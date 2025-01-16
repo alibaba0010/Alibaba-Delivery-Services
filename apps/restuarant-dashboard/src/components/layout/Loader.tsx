@@ -5,7 +5,7 @@ const Loader = () => {
   return (
     <div className="w-full flex items-center justify-center h-screen bg-black">
       <Spinner />
-      <span className="text-3xl text-white">Loading....</span>
+      <span className="text-3xl text-white ml-5">Loading....</span>
     </div>
   );
 };
