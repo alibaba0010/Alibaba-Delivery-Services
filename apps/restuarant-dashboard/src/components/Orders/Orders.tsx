@@ -57,6 +57,7 @@ const Orders = ({ isDashboard }: { isDashboard?: boolean }) => {
   const handlePaginationModelChange = (
     newPaginationModel: GridPaginationModel
   ) => {
+    console.log("newPaginationModel: ", newPaginationModel);
     setPaginationModel(newPaginationModel);
     refetch({
       page: newPaginationModel.page + 1,
@@ -123,7 +124,8 @@ const Orders = ({ isDashboard }: { isDashboard?: boolean }) => {
             columns={columns}
             paginationModel={paginationModel}
             onPaginationModelChange={handlePaginationModelChange}
-            pageSizeOptions={[5, 10, 15, 20]}
+            pageSizeOptions={[5, 10, 15, 20, 25]}
+            rowCount={data?.getOrders?.totalOrders || 0}
           />
         )}
       </Box>
