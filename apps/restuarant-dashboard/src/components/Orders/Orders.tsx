@@ -1,6 +1,6 @@
 "use client";
 import React, { useState } from "react";
-import { Box } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import { DataGrid, GridColDef, GridPaginationModel } from "@mui/x-data-grid";
 import { useQuery } from "@apollo/client";
 import { GET_ORDERS } from "../../graphql/actions/get.orders.action";
@@ -11,6 +11,7 @@ const Orders = ({ isDashboard }: { isDashboard?: boolean }) => {
     page: 0,
     pageSize: 10,
   });
+
   const { data, loading, refetch } = useQuery(GET_ORDERS, {
     variables: {
       getOrdersDto: {
@@ -19,51 +20,31 @@ const Orders = ({ isDashboard }: { isDashboard?: boolean }) => {
       },
     },
   });
-  console.log(`Pagination Model: `, paginationModel);
-  console.log("Data: ", data?.getOrders);
+
   const columns: GridColDef[] = [
     {
       field: "id",
       headerName: "ID",
       flex: 0.3,
     },
-    // { field: "userId", headerName: "User Id", flex: isDashboard ? 0.8 : 0.5 },
     ...(isDashboard
       ? []
       : [{ field: "mealId", headerName: "Meal Id", flex: 1 }]),
     { field: "restaurantId", headerName: "Restaurant Id", flex: 0.8 },
-    { field: "quantity", headerName: "quantity", flex: 0.8 },
+    { field: "quantity", headerName: "Quantity", flex: 0.8 },
     { field: "amount", headerName: "Amount", flex: 0.5 },
     { field: "totalAmount", headerName: "Total Amount", flex: 0.5 },
-    // { field: "createdAt", headerName: "Created At", flex: 0.5 },
   ];
-  // orders
-  const rows: OrdersType[] = [];
-  if (data) {
-    const { orders } = data?.getOrders;
-    orders.map((i: OrdersType) => {
-      rows.push({
-        id: i.id,
-        userId: i.userId,
-        mealId: i.mealId,
-        restaurantId: i.restaurantId,
-        quantity: i.quantity,
-        amount: i.amount,
-        totalAmount: i.totalAmount,
-        // createdAt: format(new Date(i.createdAt), "MMM Do, YYYY"),
-      });
-    });
-  }
+
+  const rows: OrdersType[] = data?.getOrders?.orders || [];
+
   const handlePaginationModelChange = (
     newPaginationModel: GridPaginationModel
   ) => {
-    console.log("newPaginationModel: ", newPaginationModel);
     setPaginationModel(newPaginationModel);
-    refetch({
-      page: newPaginationModel.page + 1,
-      pageSize: newPaginationModel.pageSize,
-    });
+    refetch();
   };
+
   return (
     <Box>
       <Box
@@ -124,8 +105,9 @@ const Orders = ({ isDashboard }: { isDashboard?: boolean }) => {
             columns={columns}
             paginationModel={paginationModel}
             onPaginationModelChange={handlePaginationModelChange}
-            pageSizeOptions={[5, 10, 15, 20, 25]}
+            pageSizeOptions={[5, 10, 15, 20]}
             rowCount={data?.getOrders?.totalOrders || 0}
+            paginationMode="server"
           />
         )}
       </Box>

@@ -1432,7 +1432,6 @@ let OrdersService = class OrdersService {
     // get all orders using pagination query
     async getOrders(getOrdersDto, req, response) {
         const { page, pageSize } = getOrdersDto;
-        console.log(`Page: ${page}, PageSize: ${pageSize}`);
         if (page <= 0 || pageSize <= 0) {
             throw new common_1.BadRequestException("Page and pageSize must be positive integers");
         }

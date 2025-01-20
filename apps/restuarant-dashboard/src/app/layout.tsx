@@ -6,6 +6,7 @@ import { Providers } from "./(providers)/providers";
 import { Toaster } from "react-hot-toast";
 import { headers } from "next/headers";
 import SideBar from "../components/layout/SideBar";
+import Protected from "../utils/protected";
 
 const poppins = Poppins({
   subsets: ["latin"],
@@ -29,6 +30,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${poppins.variable} ${inter.variable}`}>
         <Providers>
+          {/* <Protected> */}
           <div className="w-full flex">
             {pathName !== "/login" &&
               pathName !== "/register" &&
@@ -39,6 +41,7 @@ export default function RootLayout({
               )}
             {children}
           </div>
+          {/* </Protected> */}
         </Providers>
         <Toaster position="top-center" reverseOrder={false} />
       </body>
