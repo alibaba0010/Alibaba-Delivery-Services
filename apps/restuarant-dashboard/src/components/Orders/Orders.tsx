@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import { Box, Typography } from "@mui/material";
 import { DataGrid, GridColDef, GridPaginationModel } from "@mui/x-data-grid";
 import { useQuery } from "@apollo/client";
@@ -12,7 +12,7 @@ const Orders = ({ isDashboard }: { isDashboard?: boolean }) => {
     pageSize: 10,
   });
 
-  const { data, loading, refetch } = useQuery(GET_ORDERS, {
+  const { data, loading, error, refetch } = useQuery(GET_ORDERS, {
     variables: {
       getOrdersDto: {
         page: paginationModel.page + 1,
@@ -38,13 +38,21 @@ const Orders = ({ isDashboard }: { isDashboard?: boolean }) => {
 
   const rows: OrdersType[] = data?.getOrders?.orders || [];
 
-  const handlePaginationModelChange = (
-    newPaginationModel: GridPaginationModel
-  ) => {
-    setPaginationModel(newPaginationModel);
-    refetch();
-  };
+  const handlePaginationModelChange = useCallback(
+    (newPaginationModel: GridPaginationModel) => {
+      setPaginationModel(newPaginationModel);
+      refetch();
+    },
+    []
+  );
 
+  //   refetch({
+  //     getOrdersDto: {
+  //       page: newPaginationModel.page + 1,
+  //       pageSize: newPaginationModel.pageSize,
+  //     },
+  //   });
+  // }, 300),
   return (
     <Box>
       <Box
@@ -98,6 +106,12 @@ const Orders = ({ isDashboard }: { isDashboard?: boolean }) => {
       >
         {loading ? (
           <Loader />
+        ) : error ? (
+          <Box textAlign="center" p={2}>
+            <Typography color="error" aria-label="Error Message">
+              Error loading orders. Please try again later.
+            </Typography>
+          </Box>
         ) : (
           <DataGrid
             checkboxSelection={!isDashboard}
@@ -108,6 +122,7 @@ const Orders = ({ isDashboard }: { isDashboard?: boolean }) => {
             pageSizeOptions={[5, 10, 15, 20]}
             rowCount={data?.getOrders?.totalOrders || 0}
             paginationMode="server"
+            aria-label="Orders Data Table"
           />
         )}
       </Box>
