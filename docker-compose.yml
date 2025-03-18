@@ -1,41 +1,24 @@
-version: "3.9"
-
 services:
-  frontend:
-    build:
-      context: ./apps/client
-      dockerfile: Dockerfile
-    ports:
-      - "4200:4200"
-    environment:
-      - NODE_ENV=production
-    depends_on:
-      - backend
-
-  backend:
-    build:
-      context: ./apps/api-restuarants
-      dockerfile: Dockerfile
-    ports:
-      - "3001:3001"
-    environment:
-      - NODE_ENV=production
-      - DATABASE_URL=${DATABASE_URL} # Replace with your database connection string
-    depends_on:
-      - database
-
-  database:
-    image: postgres:15
-    container_name: postgres
-    restart: always
-    ports:
-      - "5432:5432"
-    environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: appdb
+  app:
+    image: node:18-alpine
+    working_dir: /app
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - .:/app
+    ports:
+      - "4200:4200" # Assuming restaurant-dashboard runs on port 4200
+      - "3000:3000" # Assuming api-restaurants runs on port 3000
+    command:
+      [
+        "sh",
+        "-c",
+        "npm install && npx nx serve restaurant-dashboard & npx nx serve api-restaurants",
+      ]
 
-volumes:
-  postgres_data:
+  prisma:
+    image: node:18-alpine
+    working_dir: /app/apps/api-restaurants
+    volumes:
+      - .:/app
+    ports:
+      - "5555:5555" # Prisma Studio default port
+    command: ["sh", "-c", "npx prisma studio"]
