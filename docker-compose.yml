@@ -1,24 +1,51 @@
+version: "3.8"
+
 services:
-  app:
-    image: node:18-alpine
+  api-restuarants:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "3002:3002"
+    volumes:
+      - .:/app
+    command: >
+      sh -c "        
+        npx nx serve api-restuarants
+      "
+
+  restuarant-dashboard:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "4200:4200"
+    volumes:
+      - .:/app
+    command: >
+      sh -c "
+        cd apps/restuarant-dashboard &&
+        npm install;
+        if [ $? -eq 0 ]; then
+          cd /app &&
+          
+          npx nx serve restuarant-dashboard;
+        else
+          echo 'unable to install restuarant-dashboard packages';
+        fi
+      "
+
+  prisma:
+    image: node:18
     working_dir: /app
     volumes:
       - .:/app
     ports:
-      - "4200:4200" # Assuming restaurant-dashboard runs on port 4200
-      - "3000:3000" # Assuming api-restaurants runs on port 3000
-    command:
-      [
-        "sh",
-        "-c",
-        "npm install && npx nx serve restaurant-dashboard & npx nx serve api-restaurants",
-      ]
-
-  prisma:
-    image: node:18-alpine
-    working_dir: /app/apps/api-restaurants
-    volumes:
-      - .:/app
-    ports:
-      - "5555:5555" # Prisma Studio default port
-    command: ["sh", "-c", "npx prisma studio"]
+      - "5555:5555"
+    command: >
+      sh -c "
+        cd apps/api-restuarants &&
+        if [ ! -f prisma/schema.prisma ]; then echo 'Error: schema.prisma not found!'; exit 1; fi;
+        if [ ! -d /app/node_modules/@prisma/client ]; then npx prisma generate; fi;
+        npx prisma db push && npx prisma studio
+      "
