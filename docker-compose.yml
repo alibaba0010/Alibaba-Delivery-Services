@@ -45,7 +45,8 @@ services:
       - "5555:5555"
     command: >
       sh -c "
-        cd apps/api-restuarants &&
+        apk add --no-cache openssl && \  
+        cd apps/api-restuarants && \
         if [ ! -f prisma/schema.prisma ]; then echo 'Error: schema.prisma not found!'; exit 1; fi;
         npx prisma generate && npx prisma db push && npx prisma studio
       "
