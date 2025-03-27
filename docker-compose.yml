@@ -22,21 +22,22 @@ services:
       - "4200:4200"
     volumes:
       - .:/app
+      - /app/node_modules
+      - /app/.next
     command: >
       sh -c "
         cd apps/restuarant-dashboard &&
         npm install;
         if [ $? -eq 0 ]; then
           cd /app &&
-          
-          npx nx serve restuarant-dashboard;
+          npx nx run restuarant-dashboard:build & npx nx serve restuarant-dashboard
         else
           echo 'unable to install restuarant-dashboard packages';
         fi
       "
 
   prisma:
-    image: node:18
+    image: node:lts-alpine
     working_dir: /app
     volumes:
       - .:/app
@@ -46,6 +47,5 @@ services:
       sh -c "
         cd apps/api-restuarants &&
         if [ ! -f prisma/schema.prisma ]; then echo 'Error: schema.prisma not found!'; exit 1; fi;
-        if [ ! -d /app/node_modules/@prisma/client ]; then npx prisma generate; fi;
-        npx prisma db push && npx prisma studio
+        npx prisma generate && npx prisma db push && npx prisma studio
       "

@@ -1,4 +1,4 @@
-FROM node:18
+FROM node:lts-alpine
 
 # Set working directory inside the container
 WORKDIR /app
