@@ -1,40 +1,23 @@
-version: "3.8"
-
 services:
   api-restuarants:
     build:
-      context: .
+      context: ./apps/api-restuarants
       dockerfile: Dockerfile
     ports:
       - "3002:3002"
-    volumes:
-      - .:/app
-    command: >
-      sh -c "        
-        npx nx serve api-restuarants
-      "
+    environment:
+      - NODE_ENV=production
+    restart: unless-stopped
 
   restuarant-dashboard:
     build:
-      context: .
+      context: ./apps/restuarant-dashboard
       dockerfile: Dockerfile
     ports:
       - "4200:4200"
-    volumes:
-      - .:/app
-      - /app/node_modules
-      - /app/.next
-    command: >
-      sh -c "
-        cd apps/restuarant-dashboard &&
-        npm install;
-        if [ $? -eq 0 ]; then
-          cd /app &&
-          npx nx run restuarant-dashboard:build & npx nx serve restuarant-dashboard
-        else
-          echo 'unable to install restuarant-dashboard packages';
-        fi
-      "
+    environment:
+      - NODE_ENV=production
+    restart: unless-stopped
 
   prisma:
     image: node:lts-alpine
