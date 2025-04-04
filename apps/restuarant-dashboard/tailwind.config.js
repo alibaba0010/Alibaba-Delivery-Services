@@ -1,4 +1,4 @@
-const { createGlobPatternsForDependencies } = require("@nx/react/tailwind");
+// const { createGlobPatternsForDependencies } = require("@nx/react/tailwind");
 const { join } = require("path");
 const { nextui } = require("@nextui-org/react");
 
@@ -10,7 +10,7 @@ module.exports = {
       "{src,pages,components,app}/**/*!(*.stories|*.spec).{ts,tsx,html}"
     ),
     "../../node_modules/@nextui-org/theme/dist/**/*.{js,ts,jsx,tsx}",
-    ...createGlobPatternsForDependencies(__dirname),
+    // ...createGlobPatternsForDependencies(__dirname),
   ],
   theme: {
     extend: {

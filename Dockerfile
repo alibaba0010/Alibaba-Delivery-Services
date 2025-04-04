@@ -1,13 +1,15 @@
 FROM node:lts-alpine
 
+RUN apk add --no-cache libc6-compat
+RUN apk add --no-cache python3 make g++ 
+RUN apk add --no-cache git curl ca-certificates
+
 # Set working directory inside the container
 WORKDIR /app
 
 # Copy package.json and install dependencies
-COPY package.json ./
-COPY apps/restuarant-dashboard/package.json ./apps/restuarant-dashboard/
+
 # RUN if [ -f package-lock.json ]; then npm ci ; else npm install; fi
-RUN npm install
 
 
 

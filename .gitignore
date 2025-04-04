@@ -13,3 +13,4 @@ cover.png
 **/*.gitkeep
 **/*.env.local
 dist/*
+apps/api-restuarants/dist/*

@@ -9,10 +9,15 @@ services:
       - "3002:3002"
     volumes:
       - .:/app
+      - .:/app/dist/apps/
+
     command: >
-      sh -c "        
-        npx nx serve api-restuarants
+      sh -c "
+        cd apps/api-restuarants && \
+        npm install || { echo 'unable to install api-restaurants packages'; exit 1; }; \
+        npm run build && npm run start:dev
       "
+
 
   restuarant-dashboard:
     build:
@@ -26,13 +31,12 @@ services:
       - /app/.next
     command: >
       sh -c "
-        cd apps/restuarant-dashboard &&
-        npm install;
-        if [ $? -eq 0 ]; then
-          cd /app &&
-          npx nx run restuarant-dashboard:build & npx nx serve restuarant-dashboard
-        else
-          echo 'unable to install restuarant-dashboard packages';
+        cd apps/restuarant-dashboard && \
+        npm install || { echo 'unable to install restuarant-dashboard packages'; exit 1; }; \
+        if npm run build; then \
+          npm run dev; \
+        else \
+          echo 'npm run build failed'; exit 1; \
         fi
       "
 
@@ -45,7 +49,8 @@ services:
       - "5555:5555"
     command: >
       sh -c "
-        cd apps/api-restuarants &&
+        apk add --no-cache openssl && \  
+        cd apps/api-restuarants && \
         if [ ! -f prisma/schema.prisma ]; then echo 'Error: schema.prisma not found!'; exit 1; fi;
         npx prisma generate && npx prisma db push && npx prisma studio
       "
